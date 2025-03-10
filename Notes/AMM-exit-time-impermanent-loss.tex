@@ -1,0 +1,97 @@
+\documentclass[8pt]{article}
+
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{dsfont}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{yhmath}
+\usepackage{relsize}
+\usepackage{textcomp}
+\usepackage{eurosym}
+\usepackage{stmaryrd}
+\usepackage{xcolor}
+\usepackage[multiple]{footmisc}
+\usepackage{graphicx}
+
+\usepackage{bigints}
+\usepackage{geometry}
+\geometry{hmargin=0.5cm,vmargin=2.4cm}
+
+\usepackage[font=small,labelfont=bf]{caption}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{cor}{Corollary}
+\newtheorem{thm}{Theorem}
+\newtheorem{prop}{Proposition}
+\newtheorem{defi}{Definition}
+\newtheorem{rem}{Remark}
+
+\newcommand{\Tc}{{\mathcal T}}
+
+\begin{document}
+
+Inside the supremum: \\
+
+\scalebox{0.9}{$P_t^X + S_t P_t^Y + R_t = \displaystyle\int_0^t \left( \varphi_c(Y_{s^-} - \xi) - \varphi_c(Y_{s^-}) - \xi S_t + r(Y_{s^-}, Z_{s^-}) \right) dN_s^a + \displaystyle\int_0^t \left( \varphi_c(Y_{s^-} + \xi) - \varphi_c(Y_{s^-}) + \xi S_t + r(Y_{s^-}, Z_{s^-}) \right) dN_s^b$}\\
+
+Value function, at time $t$ for a stopping time $\tau$ in $[t,T]$: \\
+
+\scalebox{0.9}{$v(t,y,z,S) = \sup_{\tau \in \Tc_{t,T}} \mathbb{E} \left[ \displaystyle\int_{t}^{\tau} \beta^a_\tau(Y_{s^-}, Z_{s^-}) \, dN^a_s + \displaystyle\int_{t}^{\tau} \beta^b_\tau(Y_{s^-}, Z_{s^-}) \, dN^b_s \right]$}\\
+
+where:\\
+
+\scalebox{0.9}{$\beta^a_\tau(Y_{s^-}, Z_{s^-}) = \varphi_c(Y_{s^-} - \xi) - \varphi_c(Y_{s^-}) - \xi S_\tau + r(Y_{s^-}, Z_{s^-})$}
+
+\scalebox{0.9}{$\beta^b_\tau(Y_{s^-}, Z_{s^-}) = \varphi_c(Y_{s^-} + \xi) - \varphi_c(Y_{s^-}) + \xi S_\tau + r(Y_{s^-}, Z_{s^-})$}\\
+
+Dynamic principle, we stop at time $t$ ($\tau=t$) or we continue ($\tau>t$): \\
+
+\scalebox{0.9}{$v(t,y,z,S) = \max \left \{ \mathbb{E} \left[ \displaystyle\int_{t}^{t+h} \beta^b_{t+h}(Y_{s^-}, Z_{s^-}) \, dN_s^b + \displaystyle\int_{t}^{t+h} \beta^a_{t+h}(Y_{s^-}, Z_{s^-}) \, dN_s^a + v(t+h, Y_{\tau}^{t, Y^{t,y}_{t+h}}, Z_{\tau}^{t, Z^{t,z}_{t+h}}, S_{\tau}^{t, S^{t,S}_{t+h}}) \Bigm| \mathcal{F}_t \right],0 \right \}$}
+
+\scalebox{0.9}{$0=\max \left \{\mathbb{E} \left[ \displaystyle\int_{t}^{t+h} \beta^b_{t+h}(Y_{s^-}, Z_{s^-}) \, dN_s^b + \displaystyle\int_{t}^{t+h} \beta^a_{t+h}(Y_{s^-}, Z_{s^-}) \, dN_s^a + v(t+h, Y_{\tau}^{t, Y^{t,y}_{t+h}}, Z_{\tau}^{t, Z^{t,z}_{t+h}}, S_{\tau}^{t, S^{t,S}_{t+h}}) - v(t, Y_{\tau}^{t,y}, Z_{\tau}^{t,z}, S_{\tau}^{t,s}) \Bigm| \mathcal{F}_t \right],-v(t,y,z,S) \right \}$}
+
+\scalebox{0.9}{$0=\max \left \{\mathbb{E} \left[ \displaystyle\int_{t}^{t+h} \beta^b_{t+h}(Y_{s^-}, Z_{s^-}) \, dN_s^b + \displaystyle\int_{t}^{t+h} \beta^a_{t+h}(Y_{s^-}, Z_{s^-}) \, dN_s^a + \displaystyle\int_{t}^{t+h} \, dv(u, Y_u, Z_u, S_u) \Bigm| \mathcal{F}_t \right],-v(t,y,z,S) \right \}$}\\
+
+Applying Itô formula on $v(t,Y_t,Z_t,S_t)$ with jump and diffusion processes:\\
+
+\scalebox{0.9}{%
+$\begin{aligned}
+0 = \max \bigg\{ &\mathbb{E} \bigg[ \displaystyle\int_{t}^{t+h} \frac{\partial}{\partial t} v(u, Y_u, Z_u, S_u) \, du + \displaystyle\int_{t}^{t+h} \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(u, Y_u, Z_u, S_u) \, du + \displaystyle\int_{t}^{t+h} \sigma \frac{\partial}{\partial S} v(u, Y_u, Z_u, S_u) \, dW_u \\
+&\quad + \displaystyle\int_{t}^{t+h} \big( \beta^a_{t+h}(Y_{u^-}, Z_{u^-}) + v(u, Y_{u^-} - \xi, Z_{u^-} - \varphi'_c(Y_{u^-} - \xi) + \varphi'_c(Y_{u^-}), S_u) - v(u, Y_{u^-}, Z_{u^-}, S_u) \big) \, dN_u^a \\
+&\quad + \displaystyle\int_{t}^{t+h} \big( \beta^b_{t+h}(Y_{u^-}, Z_{u^-}) + v(u, Y_{u^-} + \xi, Z_{u^-} - \varphi'_c(Y_{u^-} + \xi) + \varphi'_c(Y_{u^-}), S_u) - v(u, Y_{u^-}, Z_{u^-}, S_u) \big) \, dN_u^b \Bigm| \mathcal{F}_t \bigg] \notag, -v(t, y, z, S) \bigg\}
+\end{aligned}$
+}\\
+
+Recalling that $d\tilde{N}_t^a = dN_t^a - \lambda_t^a \, dt$, $d\tilde{N}_t^b = dN_t^b - \lambda_t^a \, dt$ with $\lambda_t^a = \bar{\lambda}^a(Z_{t^-}, Y_{t^-}, S_t)$, $\bar{\lambda}^b(Z_{t^-}, Y_{t^-}, S_t)$.\\
+
+Expectation of martingale parts $\displaystyle\int_{}^{}.dW_t$ and $\displaystyle\int_{}^{}.d\tilde{N}_t$ are 0.\\
+
+\scalebox{0.9}{%
+$\begin{aligned}
+0 = \max \bigg\{ & \displaystyle\int_{t}^{t+h} \frac{\partial}{\partial t} v(u, y, z, S) \, + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(u, y, z, S) \, \\
+&\quad + \bar{\lambda}^a(z, y, S) \big[ \varphi_c(y - \xi) - \varphi_c(y) - \xi S_{t+h} + r(y, z) + v(u, y + \xi, z - \varphi'_c(y + \xi) + \varphi'_c(y), S) - v(u, y, z, S) \big] \,  \\
+&\quad + \bar{\lambda}^b(z, y, S) \big[ \varphi_c(y + \xi) - \varphi_c(y) + \xi S_{t+h} + r(y, z) + v(u, y - \xi, z - \varphi'_c(y- \xi) + \varphi'_c(y), S) - v(u, y, z, S) \big] \, du, -v(t, y, z, S) \bigg\}
+\end{aligned}$
+}\\
+
+Therefore, for $h$ small enough, the variational inequality is:\\
+
+\scalebox{0.9}{%
+$\begin{aligned}
+0 = \max \bigg\{ & \frac{\partial}{\partial t} v(t, y, z, S) \, + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(t, y, z, S) \, \\
+&\quad + \bar{\lambda}^a(z, y, S) \big[ \varphi_c(y - \xi) - \varphi_c(y) - \xi S_t + r(y, z) + v(t, y + \xi, z - \varphi'_c(y + \xi) + \varphi'_c(y), S) - v(t, y, z, S) \big] \,  \\
+&\quad + \bar{\lambda}^b(z, y, S) \big[ \varphi_c(y + \xi) - \varphi_c(y) + \xi S_t + r(y, z) + v(t, y - \xi, z - \varphi'_c(y- \xi) + \varphi'_c(y), S) - v(t, y, z, S) \big] \, , -v(t, y, z, S) \bigg\}
+\end{aligned}$
+}\\
+
+
+With terminal condition : $v(T,y,z,S)=0$
+
+
+
+\end{document}
