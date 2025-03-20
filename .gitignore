@@ -1,0 +1,14 @@
+# ignore ALL files in ANY directory named temp
+Code/src/__pycache__
+Perso
+
+# ignore ALL .* files
+*.parquet
+*.duckdb
+*.ipynb_checkpoints
+*.pyc
+__pycache__
+*.html
+.DS_Store
+.obsidian
+requirements.txt
