@@ -71,7 +71,7 @@ class environment:
                                         #ODE associated with  v[1] 
                                         +self.sigma*v[5] - 2.*self.a1 * self.eta**2 * v[4],
                                         #ODE associated with  v[2] 
-                                        2*self.a2*self.eta* v[1],
+                                        +2*self.a2*self.eta* v[1],
                                         #ODE associated with  v[3] 
                                         -2*self.a2*self.eta* v[1] + 2* self.a1*self.r*self.xi,
                                         #ODE associated with  v[4] 
