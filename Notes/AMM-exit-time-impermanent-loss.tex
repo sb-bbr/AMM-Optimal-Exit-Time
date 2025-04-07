@@ -102,55 +102,102 @@ We have $x,y,z$ variables linked, $\frac{x}{y}=z$ and $\varphi_{c}(y) = \frac{c}
 \scalebox{1}{%
 $\begin{aligned}
 0 = & \frac{\partial}{\partial t} v(t, y, S) \, + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(t, y, S) \, \\
-&\quad + \bar{\lambda}^a(z, S) \big[ \varphi_c \big(y - \xi \big) - \varphi_c \big(y \big) - \xi S_t + r \big(\frac{c}{y^2} \big) + v(t, y + \xi, S) - v(t, y, S) \big] \,  \\
-&\quad + \bar{\lambda}^b(z, S) \big[ \varphi_c \big(y + \xi \big) - \varphi_c \big(y \big) + \xi S_t + r \big(\frac{c}{y^2} \big) + v(t, y - \xi, S) - v(t, y, S) \big] \
+&\quad + \bar{\lambda}^a(y, S) \big[ \varphi_c \big(y - \xi \big) - \varphi_c \big(y \big) - \xi S_t + r \big(\frac{c}{y^2} \big) + v(t, y + \xi, S) - v(t, y, S) \big] \,  \\
+&\quad + \bar{\lambda}^b(y, S) \big[ \varphi_c \big(y + \xi \big) - \varphi_c \big(y \big) + \xi S_t + r \big(\frac{c}{y^2} \big) + v(t, y - \xi, S) - v(t, y, S) \big] \
 \end{aligned}$
 }\\
 
-Euler discretization for $\delta$ and $h$ small enough and $\xi$ for the jumps:\\
+Backward Euler discretization for $\delta$ and $h$ small enough and $\xi$ for the jumps:\\
 
-Diffusion part:\\
+Diffusion part for $i \in \{0,...,I-1\}$, $t_0=T$ and $t_I=0$ and $j \in \{1,...,J-1\}$:\\
 
 $\begin{aligned}
-&\frac{\partial}{\partial t} v(t, y, S) \approx \frac{v(t,y,S) - v(t-\delta,y,S)}{\delta} = \frac{v(t_i,y_l,S_j) - v(t_{i-1},y_l,S_j)}{\delta} \\
-&\frac{\partial^2}{\partial S^2} v(t, y, S) \approx \frac{v(t,y,S+h) - 2v(t,y,S) + v(t,y,S-h)}{h^2} = \frac{v(t_i,y_l,S_{j+1}) - 2v(t_i,y_l,S_j) + v(t_i,y_l,S_{j-1})}{h^2}
+&\frac{\partial}{\partial t} v(t+\delta, y, S) \approx \frac{v(t+\delta,y,S) - v(t,y,S)}{\delta} = \frac{v(t_{i+1},y_l,S_j) - v(t_i,y_l,S_j)}{\delta} \\
+&\frac{\partial^2}{\partial S^2} v(t+\delta, y, S) \approx \frac{v(t+\delta,y,S+h) - 2v(t+\delta,y,S) + v(t+\delta,y,S-h)}{h^2} = \frac{v(t_{i+1},y_l,S_{j+1}) - 2v(t_{i+1},y_l,S_j) + v(t_{i+1},y_l,S_{j-1})}{h^2}
 \end{aligned}$\\ \\
 
-Jump part:\\
+Jump part for $l \in \{1,...,L-1\}$:\\
 
 $\begin{aligned}
-&\bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_i, y_{l+1}, S_j) - v(t_i, y_l, S_j) \big] \\
-&\bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_i, y_{l-1}, S_j) - v(t_i, y_l, S_j) \big]
+&\bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_{i+1}, y_{l+1}, S_j) - v(t_{i+1}, y_l, S_j) \big] \\
+&\bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_{i+1}, y_{l-1}, S_j) - v(t_{i+1}, y_l, S_j) \big]
 \end{aligned}$ \\
 
-Full Euler scheme:\\
+\underline{Full Euler scheme:}\\
 
 \scalebox{1}{%
 $\begin{aligned}
-v(t_{i-1},y_l,S_j) = & ~ v(t_i,y_l,S_j) \big [ - 1 + \delta \big(\frac{\sigma^2}{h^2} + \bar{\lambda}^a(y_l, S_j) + \bar{\lambda}^b(y_l, S_j)\big) \big] \, \\
-&+ v(t_i,y_l,S_{j+1}) \big[ - \frac{\delta \sigma^2}{2h^2} \big] \, \\
-&+ v(t_i,y_l,S_{j-1}) \big[ - \frac{\delta \sigma^2}{2h^2} \big] \, \\
-&+ v(t_i, y_{l+1}, S_j) \big[ - \bar{\lambda}^a(y_l, S_j) \big] \, \\
-&+ v(t_i, y_{l-1}, S_j) \big[ - \bar{\lambda}^b(y_l, S_j) \big] \, \\
-&- \bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] - \bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] \
+v(t_i,y_l,S_j) = & ~ v(t_{i+1},y_l,S_j) \big [ 1 - \delta \big(\frac{\sigma^2}{h^2} + \bar{\lambda}^a(y_l, S_j) + \bar{\lambda}^b(y_l, S_j)\big) \big] \, \\
+&+ v(t_{i+1},y_l,S_{j+1}) \big[\frac{\delta \sigma^2}{2h^2} \big] \, \\
+&+ v(t_{i+1},y_l,S_{j-1}) \big[\frac{\delta \sigma^2}{2h^2} \big] \, \\
+&+ v(t_{i+1}, y_{l+1}, S_j) \big[\bar{\lambda}^a(y_l, S_j) \big] \, \\
+&+ v(t_{i+1}, y_{l-1}, S_j) \big[\bar{\lambda}^b(y_l, S_j) \big] \, \\
+&+ \bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] + \bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] \
 \end{aligned}$
 }\\
 
-Operator Splitting Idea: At each time of the discretization, solve the linear system step without jumps and then adjust with jump parts. We denote:\\
+Operator Splitting Idea: At each time of the discretization, solve the linear system step without jumps and then adjust with jump parts.\\
+
+\underline{Boundary conditions:}\\
+
+A terminal time $T$, we have $v(T,y,S)=0$, in the Euler scheme this means:\\
 
 $\begin{aligned}
-&c_1(y_l,S_j) = -\frac{\delta \sigma^2}{2h^2} = c_1\\
-&c_2(y_l,S_j) = \big [ - 1 + \delta \big(\frac{\sigma^2}{h^2} + \bar{\lambda}^a(y_l, S_j) + \bar{\lambda}^b(y_l, S_j)\big) \big] \\
-&c_3(y_l,S_j) = -\frac{\delta \sigma^2}{2h^2} = c_3\\
+&\forall \, l \in \{0, \ldots, L\}, \, j \in \{0, \ldots, J\} , v(t_I, y_l, S_j) = 0\\
+\end{aligned}$\\
+
+Neumann condition:
+$\left. \frac{\partial^2 v(t, y, S)}{\partial S^2} \right|_{S = S_0} = 0, \quad 
+\left. \frac{\partial^2 v(t, y, S)}{\partial S^2} \right|_{S = S_J} = 0$, in the Euler scheme these mean:\\
+
+\scalebox{1}{%
+$\begin{aligned}
+v(t_{i},y_l,S_0) = & ~ v(t_{i+1},y_l,S_0) \big [ 1 - \delta \big(\bar{\lambda}^a(y_l, S_0) + \bar{\lambda}^b(y_l, S_0)\big) \big] \, \\
+&+ v(t_{i+1}, y_{l+1}, S_0) \big[\bar{\lambda}^a(y_l, S_0) \big] \, \\
+&+ v(t_{i+1}, y_{l-1}, S_0) \big[\bar{\lambda}^b(y_l, S_0) \big] \, \\
+&+ \bar{\lambda}^a(y_l, S_0) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_0 + r \big(\frac{c}{y_l^2} \big) \big] + \bar{\lambda}^b(y_l, S_0) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_0 + r \big(\frac{c}{y_l^2} \big) \big] \
 \end{aligned}$
+}\\
 
+\scalebox{1}{%
+$\begin{aligned}
+v(t_{i},y_l,S_J) = & ~ v(t_{i+1},y_l,S_J) \big [ 1 - \delta \big( \bar{\lambda}^a(y_l, S_J) + \bar{\lambda}^b(y_l, S_J)\big) \big] \, \\
+&+ v(t_{i+1}, y_{l+1}, S_J) \big[\bar{\lambda}^a(y_l, S_J) \big] \, \\
+&+ v(t_{i+1}, y_{l-1}, S_J) \big[\bar{\lambda}^b(y_l, S_J) \big] \, \\
+&+ \bar{\lambda}^a(y_l, S_J) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_J + r \big(\frac{c}{y_l^2} \big) \big] + \bar{\lambda}^b(y_l, S_J) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_J + r \big(\frac{c}{y_l^2} \big) \big] \
+\end{aligned}$
+}\\ \\
 
+We denote:\\
 
+$\begin{aligned}
+& c_0(y_l,S_j) = \big [ 1 - \delta \big(\bar{\lambda}^a(y_l, S_j) + \bar{\lambda}^b(y_l, S_j)\big) \big] \\
+&c_1(y_l,S_j) = \frac{\delta \sigma^2}{2h^2} = c_1\\
+&c_2(y_l,S_j) = \big [ 1 - \delta \big(\frac{\sigma^2}{h^2} + \bar{\lambda}^a(y_l, S_j) + \bar{\lambda}^b(y_l, S_j)\big) \big] \\
+&c_3(y_l,S_j) = \frac{\delta \sigma^2}{2h^2} = c_3\\
+\end{aligned}$\\ \\
 
+Linear system to solve: $V^{i,l} = A V^{i+1,l}$ for $i \in \{0,...,I-1\}$ where:\\
 
-
-
-
+$A = \begin{bmatrix}
+c_0(y_l,S_0) & 0 & 0 & \cdots &  & 0 \\
+c_1 & c_2(y_l,S_1) & c_3 & \ddots &  & \vdots \\
+0 & c_1 & c_2(y_l,S_2) & \ddots &  &  \\
+\vdots & \ddots & \ddots & \ddots & c_3 & 0 \\
+ &  &  & c_1 & c_2(y_l,S_{J-1}) & c_3 \\
+0 & \cdots &  & 0 & 0 & c_0(y_l,S_J)
+\end{bmatrix}
+\in \mathbb{R}^{J+1,J+1}$, ~~~~~
+$V^{i,l} =
+\begin{bmatrix}
+v(t_i, y_l, S_0) \\
+v(t_i, y_l, S_1) \\
+~ \\ \vdots \\ ~ \\
+v(t_i, y_l, S_{J-1}) \\
+v(t_i, y_l, S_J)
+\end{bmatrix}
+\in \mathbb{R}^{J+1}
+$\\
 
 
 
