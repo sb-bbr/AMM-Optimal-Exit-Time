@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.17)  10 APR 2025 19:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.17)  12 JUN 2025 17:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -170,6 +170,10 @@ LaTeX Info: Redefining \] on input line 2954.
 \xmathstrut@box=\box53
 \xmathstrut@dim=\dimen161
 )
+(/usr/local/texlive/2024/texmf-dist/tex/latex/jknapltx/mathrsfs.sty
+Package: mathrsfs 1996/01/01 Math RSFS package v1.0 (jk)
+\symrsfs=\mathgroup6
+)
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
 \thm@style=\toks26
@@ -184,7 +188,7 @@ Package: amsthm 2020/05/29 v2.20.6
 )
 (/usr/local/texlive/2024/texmf-dist/tex/latex/yhmath/yhmath.sty
 Package: yhmath 2020/03/17 v1.6
-\symyhlargesymbols=\mathgroup6
+\symyhlargesymbols=\mathgroup7
 LaTeX Font Info:    Redeclaring math accent \widetilde on input line 29.
 LaTeX Font Info:    Redeclaring math accent \widehat on input line 30.
 LaTeX Font Info:    Redeclaring math symbol \braceld on input line 48.
@@ -228,7 +232,7 @@ Package: eurosym 1998/08/06 v1.1 European currency symbol ``Euro''
 )
 (/usr/local/texlive/2024/texmf-dist/tex/latex/stmaryrd/stmaryrd.sty
 Package: stmaryrd 1994/03/03 St Mary's Road symbol package
-\symstmry=\mathgroup7
+\symstmry=\mathgroup8
 LaTeX Font Info:    Overwriting symbol font `stmry' in version `bold'
 (Font)                  U/stmry/m/n --> U/stmry/b/n on input line 89.
 )
@@ -265,6 +269,19 @@ Package footmisc Info: Declaring symbol style lamport* on input line 744.
 Package footmisc Info: Declaring symbol style lamport*-robust on input line 765
 .
 )
+(/usr/local/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2019/06/20 v3.9 Customized lists
+\labelindent=\skip60
+\enit@outerparindent=\dimen164
+\enit@toks=\toks33
+\enit@inbox=\box55
+\enit@count@id=\count278
+\enitdp@description=\count279
+)
+(/usr/local/texlive/2024/texmf-dist/tex/latex/comment/comment.sty
+\CommentStream=\write3
+
+Excluding comment 'comment')
 (/usr/local/texlive/2024/texmf-dist/tex/latex/bigints/bigints.sty
 Package: bigints 2010/02/15 Writing big integrals
 Package bigints Info: This is Bigints by Merciadri Luca. on input line 5.
@@ -278,48 +295,48 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 (/usr/local/texlive/2024/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2022/02/03 v1.0f TeX engine tests
 ))
-\Gm@cnth=\count278
-\Gm@cntv=\count279
-\c@Gm@tempcnt=\count280
-\Gm@bindingoffset=\dimen164
-\Gm@wd@mp=\dimen165
-\Gm@odd@mp=\dimen166
-\Gm@even@mp=\dimen167
-\Gm@layoutwidth=\dimen168
-\Gm@layoutheight=\dimen169
-\Gm@layouthoffset=\dimen170
-\Gm@layoutvoffset=\dimen171
-\Gm@dimlist=\toks33
+\Gm@cnth=\count280
+\Gm@cntv=\count281
+\c@Gm@tempcnt=\count282
+\Gm@bindingoffset=\dimen165
+\Gm@wd@mp=\dimen166
+\Gm@odd@mp=\dimen167
+\Gm@even@mp=\dimen168
+\Gm@layoutwidth=\dimen169
+\Gm@layoutheight=\dimen170
+\Gm@layouthoffset=\dimen171
+\Gm@layoutvoffset=\dimen172
+\Gm@dimlist=\toks34
 )
 (/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
-\caption@tempdima=\dimen172
-\captionmargin=\dimen173
-\caption@leftmargin=\dimen174
-\caption@rightmargin=\dimen175
-\caption@width=\dimen176
-\caption@indent=\dimen177
-\caption@parindent=\dimen178
-\caption@hangindent=\dimen179
+\caption@tempdima=\dimen173
+\captionmargin=\dimen174
+\caption@leftmargin=\dimen175
+\caption@rightmargin=\dimen176
+\caption@width=\dimen177
+\caption@indent=\dimen178
+\caption@parindent=\dimen179
+\caption@hangindent=\dimen180
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count281
-\c@continuedfloat=\count282
+\c@caption@flags=\count283
+\c@continuedfloat=\count284
 )
-\c@lemma=\count283
-\c@cor=\count284
-\c@thm=\count285
-\c@prop=\count286
-\c@defi=\count287
-\c@rem=\count288
+\c@lemma=\count285
+\c@cor=\count286
+\c@thm=\count287
+\c@prop=\count288
+\c@definition=\count289
+\c@rem=\count290
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-02-20 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count289
-\l__pdf_internal_box=\box55
+\l__color_backend_stack_int=\count291
+\l__pdf_internal_box=\box56
 )
 
 LaTeX Warning: Unused global option(s):
@@ -328,34 +345,34 @@ LaTeX Warning: Unused global option(s):
 (./AMM-exit-time-impermanent-loss.aux)
 \openout1 = `AMM-exit-time-impermanent-loss.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
 
 (/usr/local/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count290
-\scratchdimen=\dimen180
-\scratchbox=\box56
-\nofMPsegments=\count291
-\nofMParguments=\count292
-\everyMPshowfont=\toks34
-\MPscratchCnt=\count293
-\MPscratchDim=\dimen181
-\MPnumerator=\count294
-\makeMPintoPDFobject=\count295
-\everyMPtoPDFconversion=\toks35
+\scratchcounter=\count292
+\scratchdimen=\dimen181
+\scratchbox=\box57
+\nofMPsegments=\count293
+\nofMParguments=\count294
+\everyMPshowfont=\toks35
+\MPscratchCnt=\count295
+\MPscratchDim=\dimen182
+\MPnumerator=\count296
+\makeMPintoPDFobject=\count297
+\everyMPtoPDFconversion=\toks36
 ) (/usr/local/texlive/2024/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -402,113 +419,118 @@ e
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-Underfull \hbox (badness 10000) in paragraph at lines 40--41
+Underfull \hbox (badness 10000) in paragraph at lines 47--48
 
  []
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 42.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 49.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 42.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 49.
 
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 49
+.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/jknapltx/ursfs.fd
+File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
+)
 LaTeX Font Info:    Trying to load font information for OMX+yhex on input line 
-42.
+49.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/yhmath/OMXyhex.fd
 File: OMXyhex.fd 
 File: OMXyhex.fd 2013/07/03 v1.1 YH's humble contribution to TeX maths (NP)
 )
 LaTeX Font Info:    Trying to load font information for U+stmry on input line 4
-2.
+9.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
-Underfull \hbox (badness 10000) in paragraph at lines 42--43
+Underfull \hbox (badness 10000) in paragraph at lines 49--50
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 44--45
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 46--47
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 48--49
+Underfull \hbox (badness 10000) in paragraph at lines 55--56
+
+ []
+
+LaTeX Font Info:    Trying to load font information for U+euf on input line 57.
+
+(/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/ueuf.fd
+File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
+)
+Underfull \hbox (badness 10000) in paragraph at lines 59--60
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 52--53
+Underfull \hbox (badness 10000) in paragraph at lines 61--62
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 54--55
+Underfull \hbox (badness 10000) in paragraph at lines 67--68
 
  []
 
 
-Overfull \hbox (1.97789pt too wide) in paragraph at lines 58--59
-[][] 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--61
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--63
+Underfull \hbox (badness 10000) in paragraph at lines 77--78
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 70--71
+Underfull \hbox (badness 10000) in paragraph at lines 79--80
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--73
+Underfull \hbox (badness 10000) in paragraph at lines 81--82
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 74--75
+Underfull \hbox (badness 10000) in paragraph at lines 89--90
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 82--83
+Underfull \hbox (badness 10000) in paragraph at lines 91--92
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 84--85
+Underfull \hbox (badness 10000) in paragraph at lines 99--100
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 92--93
+Underfull \hbox (badness 10000) in paragraph at lines 103--104
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 96--97
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 99--101
+Underfull \hbox (badness 10000) in paragraph at lines 106--108
 
  []
 
@@ -516,27 +538,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 99--101
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}]
-Underfull \hbox (badness 10000) in paragraph at lines 108--109
+Underfull \hbox (badness 10000) in paragraph at lines 115--116
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 110--111
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 112--113
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 114--118
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 114--118
+Underfull \hbox (badness 10000) in paragraph at lines 117--118
 
  []
 
@@ -551,94 +558,369 @@ Underfull \hbox (badness 10000) in paragraph at lines 121--125
  []
 
 
+Underfull \hbox (badness 10000) in paragraph at lines 121--125
+
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 126--127
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 137--138
+Underfull \hbox (badness 10000) in paragraph at lines 128--132
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--140
+Underfull \hbox (badness 10000) in paragraph at lines 133--134
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 141--142
+Underfull \hbox (badness 10000) in paragraph at lines 144--145
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 143--144
+Underfull \hbox (badness 10000) in paragraph at lines 146--147
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 145--148
+Underfull \hbox (badness 10000) in paragraph at lines 148--149
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 149--152
+Underfull \hbox (badness 10000) in paragraph at lines 150--151
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 160--161
+Underfull \hbox (badness 10000) in paragraph at lines 152--155
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 156--159
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 167--168
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 169--170
+Underfull \hbox (badness 10000) in paragraph at lines 176--177
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 169--170
+Underfull \hbox (badness 10000) in paragraph at lines 176--177
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 171--172
+Underfull \hbox (badness 10000) in paragraph at lines 178--179
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 173--179
+Underfull \hbox (badness 10000) in paragraph at lines 180--186
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 173--179
+Underfull \hbox (badness 10000) in paragraph at lines 180--186
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 180--181
+Underfull \hbox (badness 10000) in paragraph at lines 187--188
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 182--201
+Underfull \hbox (badness 10000) in paragraph at lines 189--208
 
  []
 
-[3] (./AMM-exit-time-impermanent-loss.aux)
+[3]
+LaTeX Font Info:    Trying to load font information for U+dsrom on input line 2
+53.
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/doublestroke/Udsrom.fd
+File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
+)
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--289
+
+ []
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 293--320
+
+ []
+
+
+Overfull \hbox (12.15071pt too wide) detected at line 327
+[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--447
+
+ []
+
+[5] [6] Excluding 'comment' comment. [7] (./AMM-exit-time-impermanent-loss.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 6651 strings out of 474116
- 105229 string characters out of 5743682
- 1960187 words of memory out of 5000000
- 28930 multiletter control sequences out of 15000+600000
- 564274 words of font info for 54 fonts, out of 8000000 for 9000
+ 7124 strings out of 474116
+ 113937 string characters out of 5743682
+ 1975187 words of memory out of 5000000
+ 29370 multiletter control sequences out of 15000+600000
+ 568767 words of font info for 67 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 70i,13n,79p,450b,116s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 70i,18n,79p,470b,338s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 ></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></
@@ -647,16 +929,24 @@ r/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
 local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/loc
 al/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/
 texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/t
-exlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/tex
-live/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texli
-ve/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/t
-exlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/tex
-live/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texli
-ve/2024/texmf-dist/fonts/type1/public/yhmath/yhcmex.pfb>
-Output written on AMM-exit-time-impermanent-loss.pdf (3 pages, 164131 bytes).
+exlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/tex
+live/2024/texmf-dist/fonts/type1/public/doublestroke/dsrom10.pfb></usr/local/te
+xlive/2024/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/
+texlive/2024/texmf-dist/fonts/type1/public/amsfonts/euler/eufm7.pfb></usr/local
+/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msam5.pfb></usr/lo
+cal/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.pfb></usr
+/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb><
+/usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pf
+b></usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb>
+</usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></
+usr/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></us
+r/local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/
+local/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/lo
+cal/texlive/2024/texmf-dist/fonts/type1/public/yhmath/yhcmex.pfb>
+Output written on AMM-exit-time-impermanent-loss.pdf (7 pages, 265976 bytes).
 PDF statistics:
- 85 PDF objects out of 1000 (max. 8388607)
- 51 compressed objects within 1 object stream
+ 139 PDF objects out of 1000 (max. 8388607)
+ 85 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
