@@ -92,7 +92,7 @@ Therefore, for $h$ small enough, the variational inequality is:\\
 
 \scalebox{0.9}{%
 $\begin{aligned}
-0 = \max \bigg\{ & \frac{\partial}{\partial t} v(t, y, z, S) \, + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(t, y, z, S) \, \\
+0 = \max \bigg\{ & \frac{\partial}{\partial t} v(t, y, S) \, + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(t, y, S) \, \\
 &\quad + \bar{\lambda}^a(y, S) \big[ \varphi_c(y - \xi) - \varphi_c(y) - \xi S_t + r(y) + v(t, y - \xi, S) - v(t, y, S) \big] \,  \\
 &\quad + \bar{\lambda}^b(y, S) \big[ \varphi_c(y + \xi) - \varphi_c(y) + \xi S_t + r(y) + v(t, y + \xi, S) - v(t, y, S) \big] \, , -v(t, y, S) \bigg\}
 \end{aligned}$
@@ -100,11 +100,11 @@ $\begin{aligned}
 
 Tentative with risk-averse framework:
 
-With terminal condition : $v(T,y,z,S)=- \exp \left\{ - \gamma \left( x-X_{0} +(y-Y_{0})S + r(y) \right) \right\}$ \\
+With terminal condition : $v(T,y,S)=- \exp \left\{ - \gamma \left( x-X_{0} +(y-Y_{0})S + r(y) \right) \right\}$ \\
 
 \section{Euler Scheme}
 ~
-We have $x,y,z$ variables linked, $\frac{x}{y}=z$ and $\varphi_{c}(y) = \frac{c}{y} = x$. Therefore, the problem can be reduce from dimension 4 to dimension 3, we write again the EDP in the variational inequality.\\
+We have $x,y$ variables linked, $\frac{x}{y}=z$ and $\varphi_{c}(y) = \frac{c}{y} = x$. Therefore, the problem can be reduce from dimension 4 to dimension 2, we write again the EDP in the variational inequality.\\
 
 \scalebox{1}{%
 $\begin{aligned}
@@ -126,8 +126,8 @@ $\begin{aligned}
 Jump part for $l \in \{1,...,L-1\}$:\\
 
 $\begin{aligned}
-&\bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_{i-1}, y_{l-1}, S_j) - v(t_{i-1}, y_l, S_j) \big] \\
-&\bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_{i-1}, y_{l+1}, S_j) - v(t_{i-1}, y_l, S_j) \big]
+&\bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_{i}, y_{l-1}, S_j) - v(t_{i}, y_l, S_j) \big] \\
+&\bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_{i}, y_{l+1}, S_j) - v(t_{i}, y_l, S_j) \big]
 \end{aligned}$ \\
 
 \underline{Full Euler scheme:}\\
@@ -253,7 +253,7 @@ v(t,y,S) = &\sup_{\tau \in \Tc_{t,T}} \mathbb{E} \left[ \displaystyle\int_{t}^{\
 = & \sup_{\tau \in \Tc_{t,T}} \mathbb{E} \left[ \displaystyle\int_{t}^{\tau} \beta^a(Y_{u\shortminus}, S_u) \, \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds 1_{\{Y_{u\shortminus} \ge 2\xi\}} + \beta^b(Y_{s\shortminus}, S_u) \, \bar{\lambda}^b(Y_{u\shortminus}, S_u) \, du \right] \, \\
 \end{aligned}$
 \\ \\
-We look at both quantities inside the integrand \\ \\
+We look at both quantities inside the integrand, we assume that $\mathfrak{r}$ has linear growth and that the process $Y=(Y_t)_{t\in \mfT}$ is bounded.\\ \\
 $\begin{aligned}
 \beta^a(Y_{u\shortminus}, S_u) \, \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds 1_{\{Y_{u\shortminus} \ge 2\xi\}} = & \,\big( \varphi_c(Y_{u\shortminus} - \xi) - \varphi_c(Y_{u\shortminus}) - \xi S_u + \mathfrak{r}(Y_{{u\shortminus}}) \big) \, \max\left\{a_0, a_1 + a_2\,(S_u - \frac{c}{Y_{u{\shortminus}}^2})\right\}\, \mathds 1_{\{Y_{{u\shortminus}} \ge 2\xi\}} \,, \\
  \leq & \, \big( |\varphi_c(Y_{u\shortminus} - \xi)| + |\varphi_c(Y_{u\shortminus})| + |\xi S_u| + |\mathfrak{r}(Y_{{u\shortminus}})| \big)  \, \left(|a_0|+ |a_1 + a_2\,(S_u - \frac{c}{Y_{u{\shortminus}}^2}) | \right) \, \\
@@ -276,15 +276,15 @@ Using Jensen for concave functions and then Doob inequality we can show that
 \\ \\
 $\begin{aligned}
 \mathbb{E} \left[ \sup_{u \in {[t,T]}} |S_u| \right] \leq & \, \mathbb{E} \left[ \sup_{u \in {[0,T]}} |S_u| \right] \leq \, |S_0| + \sigma\mathbb{E} \left[ \sup_{u \in {[0,T]}} |\int_{0}^{u}dW_s| \right] = \, |S_0| + \sigma\mathbb{E} \left[ \sup_{u \in {[0,T]}} |W_u| \right] = \, |S_0| + \sigma\mathbb{E} \left[ \sup_{u \in {[0,T]}} \sqrt{W_u^2} \right] \, \\
-\leq & |S_0| + \sigma \sqrt{T}
+\leq & |S_0| + 2\sigma \sqrt{T}
 \end{aligned}$
 \\ \\
 $\begin{aligned}
 \mathbb{E} \left[ \sup_{u \in {[t,T]}} |S_u|^2 \right] \leq & \, \mathbb{E} \left[ \sup_{u \in {[0,T]}} |S_u|^2 \right] = \, S_0^2 + 2 S_0 \sigma\mathbb{E} \left[ \sup_{u \in {[0,T]}} W_u \right] + \sigma^2 \mathbb{E} \left[ \sup_{u \in {[0,T]}} W_u^2 \right] \, \\
-\leq & S_0^2 + 2S_0\sigma^2\sqrt{T} + \sigma^2T
+\leq & S_0^2 + 4S_0\sigma^2\sqrt{T} + 4\sigma^2T
 \end{aligned}$
 \\ \\ \\
-We assume that $\mathfrak{r}$ has linear growth and that the process $Y=(Y_t)_{t\in \mfT}$ is bounded. We can conclude that the value function has linear growth and then is locally bounded from above. Furthermore, looking at the QVI the value function is bounded from below by 0.
+We can conclude that the value function has linear growth and then is locally bounded from above. Furthermore, looking at the QVI the value function is bounded from below by 0.
 \\
 \begin{prop}
 $v$ is a viscosity subsolution to the QVI on $ [0,T) \times \mathbb{R}^2$.
