@@ -137,13 +137,13 @@ $\begin{aligned}
 v(t_{i+1},y_l,S_j) = & ~ v(t_{i},y_l,S_j) \big [ 1 + \delta \big(\frac{\sigma^2}{h^2} + \bar{\lambda}^a(y_l, S_j) + \bar{\lambda}^b(y_l, S_j)\big) \big] \, \\
 &+ v(t_{i},y_l,S_{j+1}) \big[-\frac{\delta \sigma^2}{2h^2} \big] \, \\
 &+ v(t_{i},y_l,S_{j-1}) \big[-\frac{\delta \sigma^2}{2h^2} \big] \, \\
-&+ v(t_{i}, y_{l-1}, S_j) \big[-\bar{\lambda}^a(y_l, S_j) \big] \, \\
-&+ v(t_{i}, y_{l+1}, S_j) \big[-\bar{\lambda}^b(y_l, S_j) \big] \, \\
-&- \bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] - \bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] \
+&+ v(t_{i+1}, y_{l-1}, S_j) \big[-\delta\bar{\lambda}^a(y_l, S_j) \big] \, \\
+&+ v(t_{i+1}, y_{l+1}, S_j) \big[-\delta\bar{\lambda}^b(y_l, S_j) \big] \, \\
+&- \delta\bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] - \delta\bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] \
 \end{aligned}$
 }\\
 
-Operator Splitting Idea: At each time of the discretization, solve the linear system step without jumps and then adjust with jump parts.\\
+Operator Splitting Idea: At each time of the discretization, add jumps and then solve the linear system.\\
 
 \underline{Boundary conditions:}\\
 

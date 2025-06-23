@@ -12,7 +12,7 @@ class PathGenerator:
         self.rate = params['rate']
         self.sigma = params['sigma']
         self.T = params['T']
-        self.S_0 = params['S_0']
+        self.S0 = params['S0']
         self.strike = params['strike']
 
         self.n_steps = params['n_steps']
@@ -33,7 +33,7 @@ class PathGenerator:
         self.d_phi_func = lambda x: -self.c / (x ** 2)
         self.intensity_a = lambda Z, S: np.maximum(self.a0, self.a1 + self.a2 * (S - Z))
         self.intensity_b = lambda Z, S: np.maximum(self.a0, self.a1 + self.a2 * (Z - S))
-        self.r_fees = lambda Z: params['fees_coeff'] * Z
+        self.r_fees = lambda Z: params['fees_coeff'] * self.ksi * self.S0 #Z
         
         self.paths = {}
 
@@ -45,7 +45,7 @@ class PathGenerator:
             'rate': self.rate,
             'sigma': self.sigma,
             'T': self.T,
-            'S_0': self.S_0,
+            'S0': self.S0,
             'strike': self.strike,
             'n_steps': self.n_steps,
             'n_paths': self.n_paths,
@@ -67,14 +67,14 @@ class PathGenerator:
         
         if BM_type == 'geometric':
             dX = np.zeros((self.n_paths, self.n_steps + 1))
-            dX[:, 0] = np.log(self.S_0)
+            dX[:, 0] = np.log(self.S0)
             dX[:, 1:] = (self.rate - 0.5 * self.sigma**2) * dt + self.sigma * np.sqrt(dt)*Z       
             
             X = np.exp(np.cumsum(dX, axis=1))
         
         elif BM_type == 'arithmetic':
             dX = np.zeros((self.n_paths, self.n_steps + 1))
-            dX[:, 0] = self.S_0
+            dX[:, 0] = self.S0
             dX[:, 1:] = self.sigma * np.sqrt(dt) * Z
 
             X = np.cumsum(dX, axis=1)
@@ -198,13 +198,13 @@ class Solver(PathGenerator):
         stopping_time = np.argmax(tau_matrix, axis=1)
         V0 = np.mean(V[:, 1], axis=0) * discount_factor
 
-        return {'V0': V0, 'V': V, 'tau_matrix': tau_matrix, 'stopping_time': stopping_time}
+        return {'V0': V0, 'V_matrix': V, 'tau_matrix': tau_matrix, 'stopping_time': stopping_time}
 
     def euler(self, delta, h, scale_factor):
 
         # Grid (time, space, jumps)
         time_discretization = np.arange(0, self.T + delta, delta)
-        S_matrix = np.arange((1-scale_factor)*self.S_0, (1+scale_factor)*self.S_0 + h, h)
+        S_matrix = np.arange((1-scale_factor)*self.S0, (1+scale_factor)*self.S0 + h, h)
         y_matrix = np.arange(np.maximum(2*self.ksi, self.Y0 - int(np.maximum(self.a1, self.a0)*self.T)*self.ksi), \
                              self.Y0 + int(np.maximum(self.a1, self.a0)*self.T)*self.ksi, self.ksi)
 
@@ -242,27 +242,33 @@ class Solver(PathGenerator):
                     A = A_c_1 + A_c_2 + A_c_3
                     A[0, 1] = 0
                     A[-1, -2] = 0
-
-                    # Solve the linear system --> know v(t_i, y_l, S_j) for all j
-                    V_matrix[i, l, :] = np.linalg.solve(A, V_matrix[i+1, l, :]) 
                     
+                    # Deal with jumps
+                    V_temp = V_matrix[i+1, l, :]
+
                     if L == 0: # No jumps
                         pass
 
                     else:
                         if l > 0:
                             # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
-                            V_matrix[i, l, :] += -1*(V_matrix[i, l-1, :]*self.intensity_a(y_matrix[l], S_matrix) \
-                                                + self.intensity_a(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l-1]) - self.phi_func(y_matrix[l]) - self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
+                            V_temp += delta*(V_matrix[i+1, l-1, :]*self.intensity_a(y_matrix[l], S_matrix) \
+                                        + self.intensity_a(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l-1]) - self.phi_func(y_matrix[l]) - self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
                         if l < L:
                             # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
-                            V_matrix[i, l, :] += -1*(V_matrix[i, l+1, :]*self.intensity_b(y_matrix[l], S_matrix) \
-                                                + self.intensity_b(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l+1]) - self.phi_func(y_matrix[l]) + self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
-                            
+                            V_temp += delta*(V_matrix[i+1, l+1, :]*self.intensity_b(y_matrix[l], S_matrix) \
+                                        + self.intensity_b(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l+1]) - self.phi_func(y_matrix[l]) + self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
+                    
+                    # Solve the linear system --> know v(t_i, y_l, S_j) for all j
+                    V_matrix[i, l, :] = np.linalg.solve(A, V_matrix[i+1, l, :])
+
+                    # Execution boundary, every point where - v(t_i, y_l, S_j) > 0 is set to 0 to satisfy the QVI
+                    V_matrix[i, l, V_matrix[i, l, :] < 0] = 0
+
             except Exception as e:
                 print(f"Error at time step {i} and jump level {l}: {e}")
 
-        return V_matrix
+        return {'V_matrix':V_matrix, 'external_mid_price_S':S_matrix, 'jumps_grid':y_matrix}
 
 
 class environment:
