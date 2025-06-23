@@ -224,6 +224,10 @@ class Solver(PathGenerator):
         # Terminal condition
         V_matrix[-1, :, :] = 0 #np.maximum(0, S_matrix - self.strike) # Call option payoff
 
+        # To store the final value of the option
+        V_matrix_QVI = np.zeros_like(V_matrix)
+        V_matrix_QVI[-1, :, :] = 0 #np.maximum(0, S_matrix - self.strike) # Call option payoff
+
         for i in range(I - 1, -1, -1): # From I - 1 to 0
             try:
                 for l in range(0, L+1): # From 0 to L
@@ -244,7 +248,7 @@ class Solver(PathGenerator):
                     A[-1, -2] = 0
                     
                     # Deal with jumps
-                    V_temp = V_matrix[i+1, l, :]
+                    V_temp = V_matrix_QVI[i+1, l, :]
 
                     if L == 0: # No jumps
                         pass
@@ -252,23 +256,27 @@ class Solver(PathGenerator):
                     else:
                         if l > 0:
                             # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
-                            V_temp += delta*(V_matrix[i+1, l-1, :]*self.intensity_a(y_matrix[l], S_matrix) \
+                            V_temp += delta*(V_matrix_QVI[i+1, l-1, :]*self.intensity_a(y_matrix[l], S_matrix) \
                                         + self.intensity_a(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l-1]) - self.phi_func(y_matrix[l]) - self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
                         if l < L:
                             # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
-                            V_temp += delta*(V_matrix[i+1, l+1, :]*self.intensity_b(y_matrix[l], S_matrix) \
+                            V_temp += delta*(V_matrix_QVI[i+1, l+1, :]*self.intensity_b(y_matrix[l], S_matrix) \
                                         + self.intensity_b(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l+1]) - self.phi_func(y_matrix[l]) + self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
                     
                     # Solve the linear system --> know v(t_i, y_l, S_j) for all j
-                    V_matrix[i, l, :] = np.linalg.solve(A, V_matrix[i+1, l, :])
+                    V_matrix[i, l, :] = np.linalg.solve(A, V_temp)
 
                     # Execution boundary, every point where - v(t_i, y_l, S_j) > 0 is set to 0 to satisfy the QVI
-                    V_matrix[i, l, V_matrix[i, l, :] < 0] = 0
+                    #print(f"BEFORE : Time step {i}, Jump level {l}: {V_matrix[i, l, :]}")
+                    V_matrix[i, l, -V_matrix[i, l, :] > 0] = 0
+                    V_matrix_QVI[i, l, :] = V_matrix[i, l, :] # Store the final value
+                    #print(f"AFTER Time step {i}, Jump level {l}: {V_matrix[i, l, :]}")
+
 
             except Exception as e:
                 print(f"Error at time step {i} and jump level {l}: {e}")
 
-        return {'V_matrix':V_matrix, 'external_mid_price_S':S_matrix, 'jumps_grid':y_matrix}
+        return {'V_matrix_QVI':V_matrix_QVI, 'external_mid_price_S':S_matrix, 'jumps_grid':y_matrix}
 
 
 class environment:
