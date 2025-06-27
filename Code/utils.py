@@ -31,9 +31,9 @@ class PathGenerator:
 
         self.phi_func = lambda x: self.c / x
         self.d_phi_func = lambda x: -self.c / (x ** 2)
-        self.intensity_a = lambda Z, S: np.maximum(self.a0, self.a1 + self.a2 * (S - Z))
-        self.intensity_b = lambda Z, S: np.maximum(self.a0, self.a1 + self.a2 * (Z - S))
-        self.r_fees = lambda Z: params['fees_coeff'] * self.ksi * self.S0 #Z
+        self.intensity_a = lambda y, S: np.maximum(self.a0, self.a1 + self.a2 * (S - self.c / (y**2)))
+        self.intensity_b = lambda y, S: np.maximum(self.a0, self.a1 + self.a2 * (self.c / (y**2) - S))
+        self.r_fees = lambda Z: params['fees_coeff']*Z 
         
         self.paths = {}
 
@@ -101,8 +101,8 @@ class PathGenerator:
         Z[:, 0] = X[:, 0] / Y[:, 0]
 
         for i in range(1, self.n_steps + 1):
-            lambda_a = self.intensity_a(Z[:, i - 1], S[:, i])
-            lambda_b = self.intensity_b(Z[:, i - 1], S[:, i])
+            lambda_a = self.intensity_a(Y[:, i - 1], S[:, i])
+            lambda_b = self.intensity_b(Y[:, i - 1], S[:, i])
 
             u_a = np.random.uniform(0, 1, size=self.n_paths)
             u_b = np.random.uniform(0, 1, size=self.n_paths)
@@ -119,7 +119,7 @@ class PathGenerator:
             Z[:, i] = Z[:, i - 1] + (-self.d_phi_func(Y[:, i - 1] + self.ksi) + self.d_phi_func(Y[:, i - 1])) * dNb_i \
                                     + (-self.d_phi_func(Y[:, i - 1] - self.ksi) + self.d_phi_func(Y[:, i - 1])) * dNa_i
 
-            R[:, i] = R[:, i - 1] + self.r_fees(Y[:, i - 1]) * (dNa_i + dNb_i)
+            R[:, i] = R[:, i - 1] + self.r_fees(self.c / (Y[:, i - 1]**2)) * (dNa_i + dNb_i)
 
         return X, Y, Z, R, S
 
@@ -149,6 +149,8 @@ class Solver(PathGenerator):
 
     def longstaff_schwartz(self, paths, deg, problem_type):
         
+        ITM = None
+
         discount_factor = np.exp(-self.rate * (self.T / self.n_steps))
         
         n_steps = paths.shape[1] - 1
@@ -157,37 +159,41 @@ class Solver(PathGenerator):
         if problem_type == 'call':
             payoff_func = lambda x, K: np.maximum(x - K, 0)
             terminal_condition = np.maximum(paths[:, -1] - self.strike, 0)
-        elif problem_type == 'put':
+        if problem_type == 'put':
             payoff_func = lambda x, K: np.maximum(K - x, 0)
             terminal_condition = np.maximum(self.strike - paths[:, -1], 0)
-        elif problem_type == 'amm':
+        if problem_type == 'amm':
             payoff_func = lambda x, K: x
             terminal_condition = 0
-            ITM = np.arange(n_paths)
+            ITM = np.ones(n_paths, dtype=bool)
         else:
-            raise ValueError("problem_type must be either 'call_option', 'put_option', or 'amm'.")
+            raise ValueError("Problem_type must be either 'call', 'put', or 'amm'.")
 
         V = np.zeros_like(paths)
         V[:, -1] = terminal_condition
+
+        V_matrix = np.zeros_like(paths)
+        V_matrix[:, -1] = terminal_condition
 
         tau_matrix = np.zeros_like(paths)
         tau_matrix[:, -1] = 1
 
         for i in range(n_steps - 1, 0, -1):
             try:
-                ITM = payoff_func(paths[:, i], self.strike) > 0
+                ITM = ITM if ITM is not None else (payoff_func(paths[:, i], self.strike) > 0)
                 if np.sum(ITM) > 0:
-                    
+
                     X_i = paths[ITM, i]
                     Y_i = V[ITM, i + 1] * discount_factor
                     coeffs = np.polyfit(X_i, Y_i, deg=deg)
 
                     continuation_value = np.polyval(coeffs, X_i)
                     exercise_value = payoff_func(X_i, self.strike)
-                    stop_here = exercise_value > continuation_value # Stop here when exercise value is greater than continuation value (> means 'indifference' is accepted)
+
+                    stop_here = exercise_value >= continuation_value # Stop here when exercise value is greater than continuation value (>= means 'indifference' is accepted to stop)
                     
                     V[ITM, i] = stop_here * exercise_value + (1 - stop_here) * V[ITM, i + 1] * discount_factor
-                    
+
                     tau_matrix[ITM, i] = stop_here.astype(int)
 
                 V[~ITM, i] = V[~ITM, i + 1] * discount_factor
@@ -205,8 +211,8 @@ class Solver(PathGenerator):
         # Grid (time, space, jumps)
         time_discretization = np.arange(0, self.T + delta, delta)
         S_matrix = np.arange((1-scale_factor)*self.S0, (1+scale_factor)*self.S0 + h, h)
-        y_matrix = np.arange(np.maximum(2*self.ksi, self.Y0 - int(np.maximum(self.a1, self.a0)*self.T)*self.ksi), \
-                             self.Y0 + int(np.maximum(self.a1, self.a0)*self.T)*self.ksi, self.ksi)
+        y_matrix = np.arange(self.Y0 - 50*self.ksi, self.Y0 + 50*self.ksi, self.ksi)
+
 
         # Coefficient of the linear system
         c_0_func = lambda y, S : 1 + delta * (self.intensity_a(y,S) + self.intensity_b(y,S))
@@ -248,7 +254,7 @@ class Solver(PathGenerator):
                     A[-1, -2] = 0
                     
                     # Deal with jumps
-                    V_temp = V_matrix_QVI[i+1, l, :]
+                    V_temp = V_matrix[i+1, l, :]
 
                     if L == 0: # No jumps
                         pass
@@ -256,11 +262,11 @@ class Solver(PathGenerator):
                     else:
                         if l > 0:
                             # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
-                            V_temp += delta*(V_matrix_QVI[i+1, l-1, :]*self.intensity_a(y_matrix[l], S_matrix) \
+                            V_temp += delta*(V_matrix[i+1, l-1, :]*self.intensity_a(y_matrix[l], S_matrix) \
                                         + self.intensity_a(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l-1]) - self.phi_func(y_matrix[l]) - self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
                         if l < L:
                             # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
-                            V_temp += delta*(V_matrix_QVI[i+1, l+1, :]*self.intensity_b(y_matrix[l], S_matrix) \
+                            V_temp += delta*(V_matrix[i+1, l+1, :]*self.intensity_b(y_matrix[l], S_matrix) \
                                         + self.intensity_b(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l+1]) - self.phi_func(y_matrix[l]) + self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
                     
                     # Solve the linear system --> know v(t_i, y_l, S_j) for all j
@@ -268,15 +274,19 @@ class Solver(PathGenerator):
 
                     # Execution boundary, every point where - v(t_i, y_l, S_j) > 0 is set to 0 to satisfy the QVI
                     #print(f"BEFORE : Time step {i}, Jump level {l}: {V_matrix[i, l, :]}")
+                    ##V_matrix[i, l, -V_matrix[i, l, :] > 0] = 0
+                    ##V_matrix_QVI[i, l, :] = V_matrix[i, l, :] # Store the final value
+
                     V_matrix[i, l, -V_matrix[i, l, :] > 0] = 0
                     V_matrix_QVI[i, l, :] = V_matrix[i, l, :] # Store the final value
+
                     #print(f"AFTER Time step {i}, Jump level {l}: {V_matrix[i, l, :]}")
 
 
             except Exception as e:
                 print(f"Error at time step {i} and jump level {l}: {e}")
 
-        return {'V_matrix_QVI':V_matrix_QVI, 'external_mid_price_S':S_matrix, 'jumps_grid':y_matrix}
+        return {'V_matrix':V_matrix_QVI, 'external_mid_price_S':S_matrix, 'jumps_grid':y_matrix}
 
 
 class environment:
