@@ -149,7 +149,7 @@ class Solver(PathGenerator):
 
     def longstaff_schwartz(self, paths, deg, problem_type):
         
-        ITM = None
+        ITM, ITM_bool = None, False
 
         discount_factor = np.exp(-self.rate * (self.T / self.n_steps))
         
@@ -158,11 +158,11 @@ class Solver(PathGenerator):
 
         if problem_type == 'call':
             payoff_func = lambda x, K: np.maximum(x - K, 0)
-            terminal_condition = np.maximum(paths[:, -1] - self.strike, 0)
-        if problem_type == 'put':
+            terminal_condition = payoff_func(paths[:, -1], self.strike)
+        elif problem_type == 'put':
             payoff_func = lambda x, K: np.maximum(K - x, 0)
-            terminal_condition = np.maximum(self.strike - paths[:, -1], 0)
-        if problem_type == 'amm':
+            terminal_condition = payoff_func(paths[:, -1], self.strike)
+        elif problem_type == 'amm':
             payoff_func = lambda x, K: x
             terminal_condition = 0
             ITM = np.ones(n_paths, dtype=bool)
@@ -172,29 +172,30 @@ class Solver(PathGenerator):
         V = np.zeros_like(paths)
         V[:, -1] = terminal_condition
 
-        V_matrix = np.zeros_like(paths)
-        V_matrix[:, -1] = terminal_condition
-
         tau_matrix = np.zeros_like(paths)
         tau_matrix[:, -1] = 1
 
+        if ITM is None: ITM_bool = True
+        
         for i in range(n_steps - 1, 0, -1):
             try:
-                ITM = ITM if ITM is not None else (payoff_func(paths[:, i], self.strike) > 0)
+                if ITM_bool:
+                    ITM = payoff_func(paths[:, i], self.strike) > 0
+
                 if np.sum(ITM) > 0:
 
                     X_i = paths[ITM, i]
                     Y_i = V[ITM, i + 1] * discount_factor
-                    coeffs = np.polyfit(X_i, Y_i, deg=deg)
+                    coeffs = np.polynomial.polynomial.polyfit(X_i, Y_i, deg=deg)
 
-                    continuation_value = np.polyval(coeffs, X_i)
-                    exercise_value = payoff_func(X_i, self.strike)
+                    continuation_value = np.polynomial.polynomial.polyval(X_i, coeffs)
+                    exercise_value_i = payoff_func(X_i, self.strike)
 
-                    stop_here = exercise_value >= continuation_value # Stop here when exercise value is greater than continuation value (>= means 'indifference' is accepted to stop)
+                    stop_here_i = exercise_value_i >= continuation_value # Stop here when exercise value is greater than continuation value (>= means 'indifference' is accepted to stop)
                     
-                    V[ITM, i] = stop_here * exercise_value + (1 - stop_here) * V[ITM, i + 1] * discount_factor
+                    V[ITM, i] = stop_here_i * exercise_value_i + (1 - stop_here_i) * V[ITM, i + 1] * discount_factor
 
-                    tau_matrix[ITM, i] = stop_here.astype(int)
+                    tau_matrix[ITM, i] = stop_here_i.astype(int)
 
                 V[~ITM, i] = V[~ITM, i + 1] * discount_factor
 
@@ -203,15 +204,16 @@ class Solver(PathGenerator):
 
         stopping_time = np.argmax(tau_matrix, axis=1)
         V0 = np.mean(V[:, 1], axis=0) * discount_factor
+        #print(V[:,1])
 
         return {'V0': V0, 'V_matrix': V, 'tau_matrix': tau_matrix, 'stopping_time': stopping_time}
 
-    def euler(self, delta, h, scale_factor):
+    def euler(self, delta, h, jump_scale_nbr, S_scale_factor):
 
         # Grid (time, space, jumps)
         time_discretization = np.arange(0, self.T + delta, delta)
-        S_matrix = np.arange((1-scale_factor)*self.S0, (1+scale_factor)*self.S0 + h, h)
-        y_matrix = np.arange(self.Y0 - 50*self.ksi, self.Y0 + 50*self.ksi, self.ksi)
+        S_matrix = np.arange((1-S_scale_factor)*self.S0, (1+S_scale_factor)*self.S0 + h, h)
+        y_matrix = np.arange(self.Y0 - jump_scale_nbr*self.ksi, self.Y0 + jump_scale_nbr*self.ksi + self.ksi, self.ksi)
 
 
         # Coefficient of the linear system
@@ -273,15 +275,8 @@ class Solver(PathGenerator):
                     V_matrix[i, l, :] = np.linalg.solve(A, V_temp)
 
                     # Execution boundary, every point where - v(t_i, y_l, S_j) > 0 is set to 0 to satisfy the QVI
-                    #print(f"BEFORE : Time step {i}, Jump level {l}: {V_matrix[i, l, :]}")
-                    ##V_matrix[i, l, -V_matrix[i, l, :] > 0] = 0
-                    ##V_matrix_QVI[i, l, :] = V_matrix[i, l, :] # Store the final value
-
                     V_matrix[i, l, -V_matrix[i, l, :] > 0] = 0
                     V_matrix_QVI[i, l, :] = V_matrix[i, l, :] # Store the final value
-
-                    #print(f"AFTER Time step {i}, Jump level {l}: {V_matrix[i, l, :]}")
-
 
             except Exception as e:
                 print(f"Error at time step {i} and jump level {l}: {e}")
