@@ -18,7 +18,6 @@ class PathGenerator:
         self.sigma = params['sigma']
         self.T = params['T']
         self.S0 = params['S0']
-        self.strike = params['strike']
 
         self.n_steps = params['n_steps']
         self.n_paths = params['n_paths']
@@ -38,7 +37,7 @@ class PathGenerator:
         self.d_phi_func = lambda x: -self.c / (x ** 2)
         self.intensity_a = lambda y, S: np.maximum(self.a0, self.a1 + self.a2 * (S - (self.c / (y**2))))
         self.intensity_b = lambda y, S: np.maximum(self.a0, self.a1 + self.a2 * ((self.c / (y**2)) - S))
-        self.r_fees = lambda Z: params['fees_coeff']*Z 
+        self.r_fees = lambda Z: params['fees_coeff'] #*Z 
         
         self.paths = {}
 
@@ -51,7 +50,6 @@ class PathGenerator:
             'sigma': self.sigma,
             'T': self.T,
             'S0': self.S0,
-            'strike': self.strike,
             'n_steps': self.n_steps,
             'n_paths': self.n_paths,
             'a0': self.a0,
@@ -153,58 +151,7 @@ class Solver(PathGenerator):
         
         super().__init__(**params)
 
-    def longstaff_schwartz_option(self, paths, deg, problem_type):
-        
-        discount_factor = np.exp(-self.rate * (self.T / self.n_steps))
-        
-        n_steps = paths.shape[1] - 1
-        n_paths = paths.shape[0]
 
-        if problem_type == 'call':
-            payoff_func = lambda x, K: np.maximum(x - K, 0)
-            terminal_condition = payoff_func(paths[:, -1], self.strike)
-        elif problem_type == 'put':
-            payoff_func = lambda x, K: np.maximum(K - x, 0)
-            terminal_condition = payoff_func(paths[:, -1], self.strike)
-        else:
-            raise ValueError("Problem_type must be either 'call', 'put', or 'amm'.")
-
-        V = np.zeros_like(paths)
-        V[:, -1] = terminal_condition
-
-        tau_matrix = np.zeros_like(paths)
-        tau_matrix[:, -1] = 1
-        
-        for i in range(n_steps - 1, 0, -1):
-            
-            try:
-                
-                ITM = payoff_func(paths[:, i], self.strike) > 0
-
-                if np.sum(ITM) > 0:
-
-                    X_i = paths[ITM, i]
-                    Y_i = V[ITM, i + 1] * discount_factor
-                    coeffs = np.polynomial.polynomial.polyfit(X_i, Y_i, deg=deg)
-
-                    continuation_value = np.polynomial.polynomial.polyval(X_i, coeffs)
-                    exercise_value_i = payoff_func(X_i, self.strike)
-
-                    stop_here_i = exercise_value_i >= continuation_value # Stop here when exercise value is greater than continuation value (>= means 'indifference' is accepted to stop)
-
-                    V[ITM, i] = stop_here_i * exercise_value_i + (1 - stop_here_i) * V[ITM, i + 1] * discount_factor
-
-                    tau_matrix[ITM, i] = stop_here_i.astype(int)
-
-                V[~ITM, i] = V[~ITM, i + 1] * discount_factor
-
-            except Exception as e:
-                print(f"Error at step {i}: {e}")
-
-        stopping_time = np.argmax(tau_matrix, axis=1)
-        V0 = np.mean(V[:, 1], axis=0) * discount_factor
-
-        return {'V0': V0, 'V_matrix': V, 'tau_matrix': tau_matrix, 'stopping_time': stopping_time}
 
     def longstaff_schwartz(self, paths, paths_S, paths_Y, deg):
         
@@ -269,11 +216,11 @@ class Solver(PathGenerator):
         V_matrix = np.zeros(shape=(I + 1, L + 1, J + 1))
 
         # Terminal condition
-        V_matrix[-1, :, :] = 0 #np.maximum(0, S_matrix - self.strike) # Call option payoff
+        V_matrix[-1, :, :] = 0 
 
         # To store the final value of the option
         V_matrix_QVI = np.zeros_like(V_matrix)
-        V_matrix_QVI[-1, :, :] = 0 #np.maximum(0, S_matrix - self.strike) # Call option payoff
+        V_matrix_QVI[-1, :, :] = 0 
 
         for i in range(I - 1, -1, -1): # From I - 1 to 0
             try:
@@ -327,86 +274,3 @@ class Solver(PathGenerator):
 
         return {'V_matrix':V_matrix_QVI, 'external_mid_price_S':S_matrix, 'jumps_grid':y_matrix}
 
-
-class environment:
-    """
-    Model parameters for the environment.
-    """
-    def __init__(self, sigma = 1., S0 = 100., Z0 = 100., Y0 = 1000., eta = 0.1, xi = 1., T = 1., 
-                 a1 = 1, a2 = 1, Nt =1_000, r = 0.5):
-        self.sigma = sigma
-        self.T = T
-        self.S0 = S0
-        self.Z0 = Z0
-        self.Y0 = Y0
-        self.eta = eta
-        self.Nt = Nt
-        self.a1 = a1
-        self.a2 = a2
-        self.xi = xi
-        self.r = r
-        self.timesteps = np.linspace(0, self.T, num = (Nt+1))
-        self.dt = self.T/self.Nt
-
-    def simulate_price_market(self, nsims=1):
-        x = np.zeros((self.Nt+1, nsims))
-        x[0,:] = self.S0
-        errs = np.random.randn(self.Nt, nsims)
-        sigma = self.sigma
-        for t in range(self.Nt):
-            x[t + 1,:] = x[t,:] + np.sqrt(self.dt) * sigma * errs[t,:]
-        return x
-    
-    def lambda_a(self, Zt, St):
-        Zt = Zt.reshape((-1,))
-        St = St.reshape((-1,))
-        nsims = len(Zt)
-        zeros_n = np.zeros((nsims,))
-        lambdaa = np.maximum(0, self.a1 + self.a2*(St-Zt))*self.dt
-        return lambdaa
-    
-    def lambda_b(self, Zt, St):
-        Zt = Zt.reshape((-1,))
-        St = St.reshape((-1,))
-        nsims = len(Zt)
-        zeros_n = np.zeros((nsims,))
-        lambdab = np.maximum(0, self.a1 + self.a2*(Zt-St))*self.dt
-        return lambdab
-    
-    def simulate_jumps(self, Zt, St):
-        Zt = Zt.reshape((-1,))
-        St = St.reshape((-1,))
-        nsims = len(Zt)
-        zeros_n = np.zeros((nsims,))
-        lambdaa = self.lambda_a(Zt, St)
-        lambdab = self.lambda_b(Zt, St)
-        jump_a = (np.random.uniform(size=(nsims,)) < lambdaa).astype(int)
-        jump_b = (np.random.uniform(size=(nsims,)) < lambdab).astype(int)
-        return jump_a, jump_b, lambdaa, lambdab
-
-
-    
-    
-    
-    def solve_v123456(self):
-        _ts = self.timesteps
-        _Gt = lambda t, v: -np.array([
-                                        #ODE associated with  v[1] 
-                                        +self.sigma*v[5] - 2.*self.a1 * self.eta**2 * v[4],
-                                        #ODE associated with  v[2] 
-                                        +2*self.a2*self.eta* v[1],
-                                        #ODE associated with  v[3] 
-                                        -2*self.a2*self.eta* v[1] + 2* self.a1*self.r*self.xi,
-                                        #ODE associated with  v[4] 
-                                        -4*self.a2*self.eta* v[4] + 2* self.a2*self.eta*v[3] - 4*self.a2*self.xi,
-                                        #ODE associated with  v[5] 
-                                        4*self.a2*self.eta* v[4] + 2* self.a2*self.xi,
-                                        #ODE associated with  v[6] 
-                                        -2*self.a2*self.eta* v[3] + 2* self.a2*self.xi
-                                        ] )
-        _sol        = solve_ivp(_Gt, 
-                            [self.T, 0], 
-                            np.array([0, 0, 0, 0, 0, 0]), 
-                            t_eval = _ts[::-1])
-        _Gt         = _sol.y
-        return _Gt
