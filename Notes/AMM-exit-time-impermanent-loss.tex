@@ -102,7 +102,7 @@ Tentative with risk-averse framework:
 
 With terminal condition : $v(T,y,S)=- \exp \left\{ - \gamma \left( x-X_{0} +(y-Y_{0})S + r(y) \right) \right\}$ \\
 
-\section{Euler Scheme}
+\section{Euler Scheme - Risk Neutral}
 ~
 We have $x,y$ variables linked, $\frac{x}{y}=z$ and $\varphi_{c}(y) = \frac{c}{y} = x$. Therefore, the problem can be reduce from dimension 4 to dimension 2, we write again the EDP in the variational inequality.\\
 
@@ -120,7 +120,8 @@ Diffusion part for $i \in \{0,...,I-1\}$, $t_0=0$ and $t_I=T$ and $j \in \{1,...
 
 $\begin{aligned}
 &\frac{\partial}{\partial t} v(t, y, S) \approx \frac{v(t + \delta,y,S) - v(t,y,S)}{\delta} = \frac{v(t_{i+1},y_l,S_j) - v(t_{i},y_l,S_j)}{\delta} \\
-&\frac{\partial^2}{\partial S^2} v(t, y, S) \approx \frac{v(t,y,S+h) - 2v(t,y,S) + v(t,y,S-h)}{h^2} = \frac{v(t_{i},y_l,S_{j+1}) - 2v(t_{i},y_l,S_j) + v(t_{i},y_l,S_{j-1})}{h^2}
+&\frac{\partial^2}{\partial S^2} v(t, y, S) \approx \frac{v(t,y,S+h) - 2v(t,y,S) + v(t,y,S-h)}{h^2} = \frac{v(t_{i},y_l,S_{j+1}) - 2v(t_{i},y_l,S_j) + v(t_{i},y_l,S_{j-1})}{h^2} \\
+&\frac{\partial}{\partial S} v(t,y,S) \approx \frac{v(t,y,S+h) - v(t,y,S)}{h}
 \end{aligned}$\\ \\
 
 Jump part for $l \in \{1,...,L-1\}$:\\
@@ -205,6 +206,98 @@ v(t_i, y_l, S_J)
 \end{bmatrix}
 \in \mathbb{R}^{J+1}
 $\\
+
+
+\section{Euler Scheme - Risk Averse}
+~
+We have $x,y$ variables linked, $\frac{x}{y}=z$ and $\varphi_{c}(y) = \frac{c}{y} = x$. Therefore, the problem can be reduce from dimension 4 to dimension 2, we write again the EDP in the variational inequality.\\
+
+\scalebox{1}{%
+$\begin{aligned}
+0 = & \quad \frac{\partial}{\partial t} v(t, y, S) \, + \frac{1}{2} \sigma^2 \left(\frac{\partial^2}{\partial S^2} v(t, y, S) - \psi \left(\frac{\partial v(t,y,S)}{\partial S}\right)^2\right) \, \\
+&\quad + \mathds{1}_{\{y+\xi \leq \overline{Y}\}} \bar{\lambda}^b(y, S) \frac{1}{\psi} \left[ 1 - \exp\left(-\psi \left(\varphi_c \big(y + \xi \big) - \varphi_c \big(y \big) + \xi S_t + r \big(y \big) + v(t, y + \xi, S) - v(t, y, S)\right)\right) \right] \, \\
+&\quad + \mathds{1}_{\{y-\xi \geq \underline{Y}\}} \bar{\lambda}^a(y, S) \frac{1}{\psi} \left[ 1 - \exp \left(-\psi\left(\varphi_c \big(y - \xi \big) - \varphi_c \big(y \big) - \xi S_t + r \big(y \big) + v(t, y - \xi, S) - v(t, y, S)\right)\right) \right] \,
+\end{aligned}$
+}\\
+
+Backward Euler discretization for $\delta$ and $h$ small enough and $\xi$ for the jumps:\\
+
+Diffusion part for $i \in \{0,...,I-1\}$, $t_0=0$ and $t_I=T$ and $j \in \{1,...,J-1\}$:\\
+
+$\begin{aligned}
+&\frac{\partial}{\partial t} v(t, y, S) \approx \frac{v(t + \delta,y,S) - v(t,y,S)}{\delta} = \frac{v(t_{i+1},y_l,S_j) - v(t_{i},y_l,S_j)}{\delta} \\
+&\frac{\partial^2}{\partial S^2} v(t, y, S) \approx \frac{v(t,y,S+h) - 2v(t,y,S) + v(t,y,S-h)}{h^2} = \frac{v(t_{i},y_l,S_{j+1}) - 2v(t_{i},y_l,S_j) + v(t_{i},y_l,S_{j-1})}{h^2} \\
+&\frac{\partial}{\partial S} v(t,y,S) \approx \frac{v(t,y,S+h) - v(t,y,S-h)}{h} = \frac{v(t_i,y_l,S_{j+1}) - v(t_i,y_l,S_{j-1})}{2h} \, \\
+&\left(\frac{\partial}{\partial S} v(t,y,S)\right)^2 \approx \left(\frac{v(t,y,S+h) - v(t,y,S-h)}{2h}\right)^2 = \frac{v^2(t_i,y_l,S_{j+1}) - 2v(t_i,y_l,S_{j+1})v(t_i,y_l,S_{j-1}) + v^2(t_i,y_l,S_{j-1})}{4h^2}
+\end{aligned}$\\ \\
+
+Jump part for $l \in \{1,...,L-1\}$:\\
+
+$\begin{aligned}
+&\bar{\lambda}^a(y_l, S_j) \frac{1}{\psi} \big[ 1 - \exp \left(-\psi \left(\varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(y \big) + v(t_{i+1}, y_{l-1}, S_j) - v(t_{i+1}, y_l, S_j) \right)\right) \big] \\
+&\bar{\lambda}^b(y_l, S_j) \frac{1}{\psi} \big[ 1 - \exp \left(-\psi \left(\varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(y \big) + v(t_{i+1}, y_{l+1}, S_j) - v(t_{i+1}, y_l, S_j) \right)\right) \big]
+\end{aligned}$ \\
+
+\underline{Full Euler scheme:}\\
+
+\scalebox{1}{%
+$\begin{aligned}
+v(t_{i+1},y_l,S_j) = & ~ v(t_{i},y_l,S_j) \big [ 1 + \delta \frac{\sigma^2}{h^2} \big] \, \\
+&+ v(t_{i},y_l,S_{j+1}) \big[ -\frac{\delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} \left(v(t_{i},y_l,S_{j+1}) - v(t_{i},y_l,S_{j-1}) \right) \big] \, \\
+&+ v(t_{i},y_l,S_{j-1}) \big[ -\frac{\delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} \left(-v(t_{i},y_l,S_{j+1}) + v(t_{i},y_l,S_{j-1}) \right) \big] \, \\
+&+ \delta \bar{\lambda}^a(y_l, S_j) \frac{1}{\psi} \big[ 1 - \exp \left(-\psi \left(\varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(y \big) + v(t_{i+1}, y_{l-1}, S_j) - v(t_{i+1}, y_l, S_j) \right)\right) \big] \, \\
+&+\delta \bar{\lambda}^b(y_l, S_j) \frac{1}{\psi} \big[ 1 - \exp \left(-\psi \left(\varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(y \big) + v(t_{i+1}, y_{l+1}, S_j) - v(t_{i+1}, y_l, S_j) \right)\right) \big]\ 
+\end{aligned}$
+}\\
+
+Let us define the following function:\\
+
+$\begin{aligned}
+F(v_{i,l}) =  v^j_{i,l} \left[1 + \delta \frac{\sigma^2}{h^2} \right]  + v^{j+1}_{i,l}  \left[ -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (v^{j+1}_{i,l} - v^{j-1}_{i,l}) \right] + v^{j-1}_{i,l}  \left[ -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (-v^{j+1}_{i,l} + v^{j-1}_{i,l}) \right]
+\end{aligned}$ \\
+
+where: $v_{i,l} =
+\begin{bmatrix}
+v(t_i, y_l, S_0) \\
+v(t_i, y_l, S_1) \\
+~ \\ \vdots \\ ~ \\
+v(t_i, y_l, S_{J-1}) \\
+v(t_i, y_l, S_J)
+\end{bmatrix}
+\in \mathbb{R}^{J+1}
+$\\
+
+The Newton method: For all $l$ in ${0,...,L}$: $v^{(k+1)}_{i,l} =  v^{(k)}_{i,l} - \left[\frac{\partial{F}}{\partial{v^{(k)}_{i,l}}}\right]^{-1}F(v^{(k)}_{i,l})$ \\
+
+With the following derivatives\\
+
+$\begin{aligned}
+\frac{\partial}{\partial v^j_{i,l}}F(v_{i,l}) = & \, 1 + \delta \frac{\sigma^2}{h^2} \,\\
+\frac{\partial}{\partial v^{j+1}_{i,l}}F(v_{i,l}) = & \left[ -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (2v^{j+1}_{i,l} - v^{j-1}_{i,l}) \right] \, \\
+\frac{\partial}{\partial v^{j-1}_{i,l}}F(v_{i,l}) = & \left[ -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (-v^{j+1}_{i,l} + 2v^{j-1}_{i,l}) \right]
+\end{aligned}$ \\ \\
+
+We denote:\\
+
+$\begin{aligned}
+& c_0 = 0 \\
+&c_1 =  -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (-v_{i,l}^{j+1} + 2v_{i,l}^{j-1})\\
+&c_2 = 1 + \delta \frac{\sigma^2}{h^2} \\
+&c_3 = -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (2v_{i,l}^{j-1} - v_{i,l}^{j+1})\\
+\end{aligned}$\\ \\
+
+The Jacobian matrix is: $\frac{\partial{F}}{\partial{v^{(k)}_{i,l}}} = \begin{bmatrix}
+c_0 & 0 & 0 & \cdots &  & 0 \\
+c_1 & c_2 & c_3 & \ddots &  & \vdots \\
+0 & c_1 & c_2 & \ddots &  &  \\
+\vdots & \ddots & \ddots & \ddots & c_3 & 0 \\
+ &  &  & c_1 & c_2 & c_3 \\
+0 & \cdots &  & 0 & 0 & c_0
+\end{bmatrix}
+\in \mathbb{R}^{J+1,J+1}$\\
+
+
+Operator Splitting Idea: At each time of the discretization, add jumps and then solve the linear system.\\
 
 \section{Viscosity Solution}
 

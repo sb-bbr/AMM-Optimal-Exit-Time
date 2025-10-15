@@ -12,13 +12,14 @@ import matplotlib.pyplot as plt
 
 class PathGenerator:
     
-    def __init__(self, **params): 
+    def __init__(self, **params):
+
+        np.random.seed(42)
         
         self.rate = params['rate']
         self.sigma = params['sigma']
         self.T = params['T']
         self.S0 = params['S0']
-        self.strike = params['strike']
 
         self.n_steps = params['n_steps']
         self.n_paths = params['n_paths']
@@ -30,9 +31,9 @@ class PathGenerator:
         self.X0 = params['X0']
         self.Y0 = params['Y0']
 
-        self.gamma = params['gamma']
+        self.psi = params['psi']
 
-        self.c = self.X0 * self.Y0
+        self.c = params['c'] #self.X0 * self.Y0
 
         self.phi_func = lambda x: self.c / x
         self.d_phi_func = lambda x: -self.c / (x ** 2)
@@ -51,7 +52,6 @@ class PathGenerator:
             'sigma': self.sigma,
             'T': self.T,
             'S0': self.S0,
-            'strike': self.strike,
             'n_steps': self.n_steps,
             'n_paths': self.n_paths,
             'a0': self.a0,
@@ -60,7 +60,7 @@ class PathGenerator:
             'ksi': self.ksi,
             'X0': self.X0,
             'Y0': self.Y0,
-            'gamma': self.gamma
+            'psi': self.psi
         }
     
     def external_mid_price_paths(self, BM_type):
@@ -124,7 +124,6 @@ class PathGenerator:
             Z[:, i] = Z[:, i - 1] + (-self.d_phi_func(Y[:, i - 1] + self.ksi) + self.d_phi_func(Y[:, i - 1])) * dNb_i \
                                     + (-self.d_phi_func(Y[:, i - 1] - self.ksi) + self.d_phi_func(Y[:, i - 1])) * dNa_i
 
-            #R[:, i] = R[:, i - 1] + self.r_fees(self.c / (Y[:, i - 1]**2)) * (dNa_i + dNb_i)
             R[:, i] = R[:, i - 1] + self.r_fees(Y[:, i - 1]) * (dNa_i + dNb_i)
 
         return X, Y, Z, R, S
@@ -135,7 +134,7 @@ class PathGenerator:
 
         self.paths['external_mid_price_S'] = S
         self.paths['amm_model_0'] = (X - self.X0) + S * (Y - self.Y0) + R
-        self.paths['amm_model_utility'] = np.exp(-self.gamma * ((X - self.X0) + S * (Y - self.Y0) + R))
+        #self.paths['amm_model_utility'] = -np.exp(-self.psi * ((X - self.X0) + S * (Y - self.Y0) + R))
         self.paths['asset_X'] = X
         self.paths['asset_Y'] = Y
         self.paths['asset_Z'] = Z
@@ -153,89 +152,65 @@ class Solver(PathGenerator):
         
         super().__init__(**params)
 
-    def longstaff_schwartz_option(self, paths, deg, problem_type):
-        
-        discount_factor = np.exp(-self.rate * (self.T / self.n_steps))
+    def longstaff_schwartz(self, paths, paths_S, paths_Y, deg, risk_neutral=False):
         
         n_steps = paths.shape[1] - 1
         n_paths = paths.shape[0]
 
-        if problem_type == 'call':
-            payoff_func = lambda x, K: np.maximum(x - K, 0)
-            terminal_condition = payoff_func(paths[:, -1], self.strike)
-        elif problem_type == 'put':
-            payoff_func = lambda x, K: np.maximum(K - x, 0)
-            terminal_condition = payoff_func(paths[:, -1], self.strike)
+        V = np.zeros_like(paths)
+        V_psi = np.zeros_like(paths)
+
+        tau_matrix = np.zeros_like(paths)
+        tau_matrix[:, -1] = 1
+
+        if risk_neutral:
+            V[:, -1] = 0
         else:
-            raise ValueError("Problem_type must be either 'call', 'put', or 'amm'.")
+            V[:, -1] = -np.exp(-self.psi*paths[:, -1])
+            V_psi[:, -1] = -(1/self.psi)*np.log(-V[:, -1])-paths[:, -1]
 
-        V = np.zeros_like(paths)
-        V[:, -1] = terminal_condition
-
-        tau_matrix = np.zeros_like(paths)
-        tau_matrix[:, -1] = 1
-        
-        for i in range(n_steps - 1, 0, -1):
-            
-            try:
-                
-                ITM = payoff_func(paths[:, i], self.strike) > 0
-
-                if np.sum(ITM) > 0:
-
-                    X_i = paths[ITM, i]
-                    Y_i = V[ITM, i + 1] * discount_factor
-                    coeffs = np.polynomial.polynomial.polyfit(X_i, Y_i, deg=deg)
-
-                    continuation_value = np.polynomial.polynomial.polyval(X_i, coeffs)
-                    exercise_value_i = payoff_func(X_i, self.strike)
-
-                    stop_here_i = exercise_value_i >= continuation_value # Stop here when exercise value is greater than continuation value (>= means 'indifference' is accepted to stop)
-
-                    V[ITM, i] = stop_here_i * exercise_value_i + (1 - stop_here_i) * V[ITM, i + 1] * discount_factor
-
-                    tau_matrix[ITM, i] = stop_here_i.astype(int)
-
-                V[~ITM, i] = V[~ITM, i + 1] * discount_factor
-
-            except Exception as e:
-                print(f"Error at step {i}: {e}")
-
-        stopping_time = np.argmax(tau_matrix, axis=1)
-        V0 = np.mean(V[:, 1], axis=0) * discount_factor
-
-        return {'V0': V0, 'V_matrix': V, 'tau_matrix': tau_matrix, 'stopping_time': stopping_time}
-
-    def longstaff_schwartz(self, paths, paths_S, paths_Y, deg):
-        
-        n_steps = paths.shape[1] - 1
-        n_paths = paths.shape[0]
-
-        V = np.zeros_like(paths)
-        V[:, -1] = 0 # Terminal condition
-
-        tau_matrix = np.zeros_like(paths)
-        tau_matrix[:, -1] = 1
-        
         for i in range(n_steps - 1, 0, -1):
             
             try:
                 
                 Y_i = V[:, i + 1]
-                X_i = np.column_stack((paths_S[:,i], paths_Y[:,i]))
+                
+                if risk_neutral:
 
-                poly = PolynomialFeatures(degree=deg, include_bias=False)
-                X_poly_i = poly.fit_transform(X_i)
+                    # Polynomial of state variables
+                    X_i = np.column_stack((paths_S[:, i], paths_Y[:, i]))
 
-                model = LinearRegression()
-                model.fit(X_poly_i, Y_i)
-                continuation_value = model.predict(X_poly_i)
+                    poly = PolynomialFeatures(degree=deg, include_bias=False)
+                    X_poly_i = poly.fit_transform(X_i)
 
-                exercise_value_i = 0
+                    model = LinearRegression()
+                    model.fit(X_poly_i, Y_i)
+                    continuation_value = model.predict(X_poly_i)
 
-                stop_here_i = exercise_value_i > continuation_value #+ epsilon # Stop here when exercise value is greater than continuation value (>= means 'indifference' is accepted to stop)
+                    # PPD
+                    exercise_value_i = 0
+                    stop_here_i = exercise_value_i > continuation_value # Stop here when exercise value is greater than continuation value (>= means 'indifference' is accepted to stop)
+                    V[:, i] = stop_here_i * exercise_value_i + (1 - stop_here_i) * (paths[:, i + 1] - paths[:, i] + V[:, i + 1])
 
-                V[:, i] = stop_here_i * exercise_value_i + (1 - stop_here_i) * (paths[:, i + 1] - paths[:, i] + V[:, i + 1])
+                else:
+                    # Polynomial of state variables
+                    X_i = np.column_stack((paths_S[:, i], paths_Y[:, i], paths[:, i]))
+
+                    poly = PolynomialFeatures(degree=deg, include_bias=False)
+                    X_poly_i = poly.fit_transform(X_i)
+
+                    model = LinearRegression()
+                    model.fit(X_poly_i, Y_i)
+                    continuation_value = model.predict(X_poly_i)
+
+                    # PPD
+                    exercise_value_i = -np.exp(-self.psi*(paths[:, i + 1]))
+                    stop_here_i = exercise_value_i > continuation_value
+                    V[:, i] =  stop_here_i * exercise_value_i + (1 - stop_here_i) * V[:, i + 1]
+                    
+                    # Transform back to original scale
+                    V_psi[:, i] = -(1/self.psi)*np.log(-V[:, i])-paths[:, i]
+
 
                 tau_matrix[:, i] = stop_here_i.astype(int)
 
@@ -243,9 +218,12 @@ class Solver(PathGenerator):
                 print(f"Error at step {i}: {e}")
 
         stopping_time = np.argmax(tau_matrix, axis=1)
-        V0 = np.mean(V[:, 1], axis=0)
 
-        return {'V0': V0, 'V_matrix': V, 'tau_matrix': tau_matrix, 'stopping_time': stopping_time}
+        V_matrix = V if risk_neutral else V_psi
+        
+        V0 = np.mean(V_matrix[:, 1], axis=0)
+
+        return {'V0': V0, 'V_matrix': V_matrix, 'tau_matrix': tau_matrix, 'stopping_time': stopping_time}
     
     def euler(self, delta, h, jump_scale_nbr, S_scale_factor):
 
@@ -253,7 +231,6 @@ class Solver(PathGenerator):
         time_discretization = np.arange(0, self.T + delta, delta)
         S_matrix = np.arange((1-S_scale_factor)*self.S0, (1+S_scale_factor)*self.S0 + h, h)
         y_matrix = np.arange(self.Y0 - jump_scale_nbr*self.ksi, self.Y0 + jump_scale_nbr*self.ksi + self.ksi, self.ksi)
-
 
         # Coefficient of the linear system
         c_0_func = lambda y, S : 1 + delta * (self.intensity_a(y,S) + self.intensity_b(y,S))
@@ -303,14 +280,12 @@ class Solver(PathGenerator):
                     else:
                         if l > 0:
                             # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
-                            # V_temp += delta*(V_matrix[i+1, l-1, :]*self.intensity_a(y_matrix[l], S_matrix) \
-                            #             + self.intensity_a(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l-1]) - self.phi_func(y_matrix[l]) - self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
+
                             V_temp += delta*(V_matrix[i+1, l-1, :]*self.intensity_a(y_matrix[l], S_matrix) \
                                          + self.intensity_a(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l-1]) - self.phi_func(y_matrix[l]) - self.ksi*S_matrix + self.r_fees(y_matrix[l])))
                         if l < L:
                             # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
-                            # V_temp += delta*(V_matrix[i+1, l+1, :]*self.intensity_b(y_matrix[l], S_matrix) \
-                            #             + self.intensity_b(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l+1]) - self.phi_func(y_matrix[l]) + self.ksi*S_matrix + self.r_fees(self.c/(y_matrix[l]**2))))
+                            
                             V_temp += delta*(V_matrix[i+1, l+1, :]*self.intensity_b(y_matrix[l], S_matrix) \
                                          + self.intensity_b(y_matrix[l], S_matrix)*(self.phi_func(y_matrix[l+1]) - self.phi_func(y_matrix[l]) + self.ksi*S_matrix + self.r_fees(y_matrix[l])))
                     
@@ -326,6 +301,118 @@ class Solver(PathGenerator):
                 print(f"Error at time step {i} and jump level {l}: {e}")
 
         return {'V_matrix':V_matrix_QVI, 'external_mid_price_S':S_matrix, 'jumps_grid':y_matrix}
+
+
+    def euler_v2(self, delta, h, jump_scale_nbr, S_scale_factor, risk_neutral=True):
+
+        # Grid (time, space, jumps)
+        time_discretization = np.arange(0, self.T + delta, delta)
+        S_matrix = np.arange((1-S_scale_factor)*self.S0, (1+S_scale_factor)*self.S0 + h, h)
+        y_matrix = np.arange(self.Y0 - jump_scale_nbr*self.ksi, self.Y0 + jump_scale_nbr*self.ksi + self.ksi, self.ksi)
+
+        # Backward scheme
+
+        I = time_discretization.shape[0] - 1
+        L = y_matrix.shape[0] - 1
+        J = S_matrix.shape[0] - 1
+
+        V_matrix = np.zeros(shape=(I + 1, L + 1, J + 1))
+
+        # Terminal condition
+        V_matrix[-1, :, :] = 0 #np.maximum(0, S_matrix - self.strike) # Call option payoff
+
+        # To store the final value of the option
+        V_matrix_QVI = np.zeros_like(V_matrix)
+        V_matrix_QVI[-1, :, :] = 0 #np.maximum(0, S_matrix - self.strike) # Call option payoff
+
+        for i in tqdm(range(I - 1, -1, -1)): # From I - 1 to 0
+            try:
+                for l in range(0, L+1): # From 0 to L
+                    
+                    # Deal with jumps
+                    V_temp = V_matrix[i + 1, l, :]
+
+                    if L == 0: # No jumps
+                        pass
+
+                    else:
+                        if l > 0:
+                            # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
+                            V_temp += delta*self.intensity_a(y_matrix[l], S_matrix)*(1/self.psi)*(1 - np.exp(-self.psi*(self.phi_func(y_matrix[l-1]) - self.phi_func(y_matrix[l]) - self.ksi*S_matrix + self.r_fees(y_matrix[l]) + V_matrix[i+1, l-1, :] - V_matrix[i+1, l, :])))
+
+                        if l < L:
+                            # Adjust v(t_i, y_l, S_j) --> know v(t_i, y_l, S_j) for all l and j
+                            V_temp += delta*self.intensity_b(y_matrix[l], S_matrix)*(1/self.psi)*(1 - np.exp(-self.psi*(self.phi_func(y_matrix[l+1]) - self.phi_func(y_matrix[l]) + self.ksi*S_matrix + self.r_fees(y_matrix[l]) + V_matrix[i+1, l+1, :] - V_matrix[i+1, l, :])))
+
+                    ### Initial guess by solving a linear system (PDE without the square)
+                    # Coefficient of the linear system
+                    c_0_0, c_0_J = 1, 1
+                    c_2 = 1 + delta * ((1/h**2)*self.sigma**2)
+                    c_1_3 = -(1/(2*h**2)) * delta * (self.sigma**2)
+
+                    # Define the linear system
+                    A_c_2 = np.diag(np.concatenate((np.array([c_0_0]), np.ones(shape=(J-1,))*c_2, np.array([c_0_J]))), k=0) # diagonal
+                    A_c_1 = np.diag(np.ones(shape=(J,))*c_1_3, k=1) # upper diagonal
+                    A_c_3 = np.diag(np.ones(shape=(J,))*c_1_3, k=-1) # lower diagonal
+
+                    A = A_c_1 + A_c_2 + A_c_3
+                    A[0, 1] = 0
+                    A[-1, -2] = 0
+
+                    # Solve the linear system and use it as a the initial guess
+                    V_newton = np.linalg.solve(A, V_temp)
+
+                    ### Handle the non-linear part
+
+                    if not risk_neutral:
+
+                        # Solve the system --> know v(t_i, y_l, S_j) for all j
+                        iters = 0
+                        max_iters = 15
+                        epsilon = 10**(-12)
+
+                        F = lambda V: V*(1+delta*self.sigma**2/(h**2)) \
+                                        + np.concatenate([V[1:], np.array([0])])*((-delta*self.sigma**2/(2*h**2) + (np.concatenate([V[1:], np.array([0])]) - np.concatenate([np.array([0]), V[:-1]]))*self.psi*delta*self.sigma**2/(4*h**2))) \
+                                        + np.concatenate([np.array([0]), V[:-1]])*((-delta*self.sigma**2/(2*h**2) + (-np.concatenate([V[1:], np.array([0])]) + np.concatenate([np.array([0]), V[:-1]]))*self.psi*delta*self.sigma**2/(4*h**2)))
+                    
+
+                        V_newton = np.zeros(shape=(J+1,))
+
+                        while np.sqrt(np.sum((F(V_newton) - V_temp)**2)) > epsilon and iters < max_iters:
+
+                            # Neumann boundary conditions
+                            c_0_0, c_0_J = 1, 1
+                            
+                            c_2 = 1 + delta * ((1/h**2)*self.sigma**2 - self.psi*self.sigma**2/(2*h))
+                            c_1 = - (delta * (self.sigma**2) / (2*h**2)) + (self.psi * delta * self.sigma**2 / (4*h**2)) * (-V_newton[1:] + 2*V_newton[:-1])
+                            c_3 = - (delta * (self.sigma**2) / (2*h**2)) + (self.psi * delta * self.sigma**2 / (4*h**2)) * (2*V_newton[:-1] - V_newton[1:])
+
+                            J_c_2 = np.diag(np.concatenate((np.array([c_0_0]), np.ones(shape=(J-1,))*c_2, np.array([c_0_J]))), k=0) # diagonal
+                            J_c_1 = np.diag(np.ones(shape=(J,))*c_1, k=-1) # lower diagonal
+                            J_c_3 = np.diag(np.ones(shape=(J,))*c_3, k=1) # upper diagonal
+
+                            Jacobian_matrix = J_c_2 + J_c_1 + J_c_3
+                            Jacobian_matrix[0, 1] = 0
+                            Jacobian_matrix[-1, -2] = 0
+
+                            V_newton = V_newton - np.linalg.inv(Jacobian_matrix)@(F(V_newton) - V_temp)
+
+                            iters+=1
+
+                        if np.sqrt(np.sum((F(V_newton) - V_temp)**2)) > epsilon:
+                            print('Did not converge')
+
+                    V_matrix[i, l, :] = V_newton
+                    
+                    # Execution boundary, every point where - v(t_i, y_l, S_j) > 0 is set to 0 to satisfy the QVI
+                    V_matrix[i, l, -V_matrix[i, l, :] > 0] = 0
+                    V_matrix_QVI[i, l, :] = V_matrix[i, l, :] # Store the final value
+
+            except Exception as e:
+                print(f"Error at time step {i} and jump level {l}: {e}")
+
+        return {'V_matrix':V_matrix_QVI, 'external_mid_price_S':S_matrix, 'jumps_grid':y_matrix}
+
 
 
 class environment:
