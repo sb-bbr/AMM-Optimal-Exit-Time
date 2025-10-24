@@ -3,6 +3,7 @@ Code/src/__pycache__
 Perso
 
 # ignore ALL .* files
+*.pkl
 *.parquet
 *.duckdb
 *.ipynb_checkpoints
