@@ -1,0 +1,93 @@
+\begin{thebibliography}{}
+
+\bibitem[Angeris et~al., 2020]{angeris2021analysis}
+Angeris, G., Kao, H.-T., Chiang, R., Noyes, C., and Chitra, T. (2020).
+\newblock An analysis of uniswap markets.
+\newblock {\em Cryptoeconomic Systems Journal}.
+
+\bibitem[Aoyagi and Ito, 2025]{aoyagi2025coexisting}
+Aoyagi, J. and Ito, Y. (2025).
+\newblock Coexisting exchange platforms: Limit order books and automated market
+  makers.
+\newblock {\em Journal of Political Economy Microeconomics}, 3(3):000--000.
+
+\bibitem[Aqsha et~al., 2025]{aqsha2025equilibrium}
+Aqsha, A., Bergault, P., and S{\'a}nchez-Betancourt, L. (2025).
+\newblock Equilibrium reward for liquidity providers in automated market
+  makers.
+\newblock {\em arXiv preprint arXiv:2503.22502}.
+
+\bibitem[Baggiani et~al., 2025]{baggiani2025optimal}
+Baggiani, L., Herdegen, M., and S{\'a}nchez-Betancourt, L. (2025).
+\newblock Optimal dynamic fees in automated market makers.
+\newblock {\em arXiv preprint arXiv:2506.02869}.
+
+\bibitem[Barbon and Ranaldo, 2021]{barbon2021quality}
+Barbon, A. and Ranaldo, A. (2021).
+\newblock On the quality of cryptocurrency markets: Centralized versus
+  decentralized exchanges.
+\newblock {\em arXiv preprint arXiv:2112.07386}.
+
+\bibitem[Bergault et~al., 2024]{bergault2024automated}
+Bergault, P., Bertucci, L., Bouba, D., and Gu{\'e}ant, O. (2024).
+\newblock Automated market makers: Mean-variance analysis of lps payoffs and
+  design of pricing functions.
+\newblock {\em Digital Finance}, 6(2):225--247.
+
+\bibitem[Campbell et~al., 2025]{campbell2025optimal}
+Campbell, S., Bergault, P., Milionis, J., and Nutz, M. (2025).
+\newblock Optimal fees for liquidity provision in automated market makers.
+\newblock {\em arXiv preprint arXiv:2508.08152}.
+
+\bibitem[Canidio and Fritsch, 2023]{canidio2023arbitrageurs}
+Canidio, A. and Fritsch, R. (2023).
+\newblock Arbitrageurs' profits, lvr, and sandwich attacks: batch trading as an
+  amm design response.
+\newblock {\em arXiv preprint arXiv:2307.02074}.
+
+\bibitem[Cao et~al., 2025]{cao2025structural}
+Cao, D., Falk, B.~H., Kogan, L., and Tsoukalas, G. (2025).
+\newblock A structural model of automated market making.
+\newblock {\em Available at SSRN 4591447}.
+
+\bibitem[Capponi and Zhu, 2025]{zhu2025optimal}
+Capponi, A. and Zhu, B. (2025).
+\newblock Optimal exiting for liquidity provision in constant function market
+  makers.
+\newblock {\em Available at SSRN 5148585}.
+
+\bibitem[Cartea et~al., 2023]{cartea2023IL}
+Cartea, A., Drissi, F., and Monga, M. (2023).
+\newblock Decentralised finance and automated market making: Predictable loss
+  and optimal liquidity provision.
+\newblock (2309.08431).
+
+\bibitem[Cartea et~al., 2024]{cartea2024strategic}
+Cartea, {\'A}., Drissi, F., S{\'a}nchez-Betancourt, L., Siska, D., and Szpruch,
+  L. (2024).
+\newblock Strategic bonding curves in automated market makers.
+\newblock {\em Available at SSRN 5018420}.
+
+\bibitem[Evans et~al., 2021]{evans2021optimal}
+Evans, A., Angeris, G., and Chitra, T. (2021).
+\newblock Optimal fees for geometric mean market makers.
+\newblock In {\em International Conference on Financial Cryptography and Data
+  Security}, pages 65--79. Springer.
+
+\bibitem[Fukasawa et~al., 2024]{fukasawa2024model}
+Fukasawa, M., Maire, B., and Wunsch, M. (2024).
+\newblock Model-free hedging of impermanent loss in geometric mean market
+  makers with proportional transaction fees.
+\newblock {\em Applied Mathematical Finance}, 31(2):108--129.
+
+\bibitem[Lehar and Parlour, 2025]{lehar2025decentralized}
+Lehar, A. and Parlour, C. (2025).
+\newblock Decentralized exchange: The uniswap automated market maker.
+\newblock {\em The Journal of Finance}, 80(1):321--374.
+
+\bibitem[Milionis et~al., 2022]{milionis2022LVR}
+Milionis, J., Moallemi, C.~C., Roughgarden, T., and Zhang, A.~L. (2022).
+\newblock Automated market making and loss-versus-rebalancing.
+\newblock (2208.06046).
+
+\end{thebibliography}

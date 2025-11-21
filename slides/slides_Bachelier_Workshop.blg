@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2024)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: slides_Bachelier_Workshop.aux
+The style file: apalike.bst
+Database file #1: references.bib
+Warning--empty journal in cartea2023IL
+Warning--there's a number but no volume in cartea2023IL
+Warning--empty journal in milionis2022LVR
+Warning--there's a number but no volume in milionis2022LVR
+You've used 16 entries,
+            1935 wiz_defined-function locations,
+            557 strings with 6709 characters,
+and the built_in function-call counts, 6099 in all, are:
+= -- 579
+> -- 303
+< -- 6
++ -- 106
+- -- 102
+* -- 521
+:= -- 1105
+add.period$ -- 49
+call.type$ -- 16
+change.case$ -- 131
+chr.to.int$ -- 16
+cite$ -- 20
+duplicate$ -- 224
+empty$ -- 382
+format.name$ -- 128
+if$ -- 1151
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 16
+newline$ -- 83
+num.names$ -- 48
+pop$ -- 123
+preamble$ -- 1
+purify$ -- 131
+quote$ -- 0
+skip$ -- 172
+stack$ -- 0
+substring$ -- 320
+swap$ -- 21
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 96
+warning$ -- 4
+while$ -- 43
+width$ -- 0
+write$ -- 200
+(There were 4 warnings)

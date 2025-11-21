@@ -1,6 +1,6 @@
 # ignore ALL files in ANY directory named temp
-Code/src/__pycache__
-Perso
+code/src/__pycache__
+perso
 
 # ignore ALL .* files
 *.pkl
