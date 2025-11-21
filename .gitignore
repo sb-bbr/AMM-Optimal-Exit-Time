@@ -1,6 +1,6 @@
 # ignore ALL files in ANY directory named temp
-perso
-venv
+perso/
+.venv/
 
 # ignore ALL .* files
 *.pkl
