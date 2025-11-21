@@ -1,6 +1,6 @@
 # ignore ALL files in ANY directory named temp
-code/src/__pycache__
 perso
+venv
 
 # ignore ALL .* files
 *.pkl
@@ -10,6 +10,23 @@ perso
 *.pyc
 __pycache__
 *.html
+
+# ignore LaTeX files
+*.aux
+*.log
+*.synctex.gz
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.nav
+*.out
+*.snm
+*.toc
+
+# ignore MacOS File
 .DS_Store
+
+# ignore Other
 .obsidian
 requirements.txt

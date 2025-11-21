@@ -1,0 +1,594 @@
+\documentclass[8pt]{article}
+
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{dsfont}
+\usepackage{mathtools}
+\usepackage{mathrsfs} 
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{yhmath}
+\usepackage{relsize}
+\usepackage{textcomp}
+\usepackage{eurosym}
+\usepackage{stmaryrd}
+\usepackage{xcolor}
+\usepackage[multiple]{footmisc}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{comment}
+
+\usepackage{bigints}
+\usepackage{geometry}
+\geometry{hmargin=0.5cm,vmargin=2.4cm}
+
+\usepackage[font=small,labelfont=bf]{caption}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{cor}{Corollary}
+\newtheorem{thm}{Theorem}
+\newtheorem{prop}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{rem}{Remark}
+
+\newcommand{\Tc}{{\mathcal T}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\mfT}{{\mathfrak{T}}}
+
+\DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39}
+
+\begin{document}
+
+\section{Variational Inequality}
+
+Inside the supremum: \\
+
+\scalebox{0.9}{$P_t^X + S_t P_t^Y + R_t = \displaystyle\int_0^t \left( \varphi_c(Y_{s\shortminus} - \xi) - \varphi_c(Y_{s\shortminus}) - \xi S_t + r(Y_{s\shortminus}) \right) dN_s^a + \displaystyle\int_0^t \left( \varphi_c(Y_{s\shortminus} + \xi) - \varphi_c(Y_{s\shortminus}) + \xi S_t + r(Y_{s\shortminus}) \right) dN_s^b$}\\
+
+Value function, at time $t$ for a stopping time $\tau$ in $[t,T]$: \\
+
+\scalebox{0.9}{$v(t,y,S) = \sup_{\tau \in \Tc_{t,T}} \mathbb{E} \left[ \displaystyle\int_{t}^{\tau} \beta^a_\tau(Y_{s\shortminus}, S_{s}) \, dN^a_s + \displaystyle\int_{t}^{\tau} \beta^b_\tau(Y_{s\shortminus}, S_{s}) \, dN^b_s \right]$}\\
+
+where:\\
+
+\scalebox{0.9}{$\beta^a_\tau(Y_{s\shortminus}, S_{s}) = \varphi_c(Y_{s\shortminus} - \xi) - \varphi_c(Y_{s\shortminus}) - \xi S_\tau + \mathfrak{r}(Y_{s\shortminus})$}
+
+\scalebox{0.9}{$\beta^b_\tau(Y_{s\shortminus}, S_{s}) = \varphi_c(Y_{s\shortminus} + \xi) - \varphi_c(Y_{s\shortminus}) + \xi S_\tau + \mathfrak{r}(Y_{s\shortminus})$}\\
+
+Dynamic principle, we stop at time $t$ ($\tau=t$) or we continue ($\tau>t$): \\
+
+\scalebox{0.9}{$v(t,y,S) = \max \left \{ \mathbb{E} \left[ \displaystyle\int_{t}^{t+h} \beta^b_{t+h}(Y_{s\shortminus}, S_{s}) \, dN_s^b + \displaystyle\int_{t}^{t+h} \beta^a_{t+h}(Y_{s\shortminus}, S_{s}) \, dN_s^a + v(t+h, Y_{\tau}^{t, Y^{t,y}_{t+h}}, S_{\tau}^{t, S^{t,S}_{t+h}}) \Bigm| \mathcal{F}_t \right],0 \right \}$}
+
+\scalebox{0.9}{$0=\max \left \{\mathbb{E} \left[ \displaystyle\int_{t}^{t+h} \beta^b_{t+h}(Y_{s\shortminus}, S_{s}) \, dN_s^b + \displaystyle\int_{t}^{t+h} \beta^a_{t+h}(Y_{s\shortminus}, S_{s}) \, dN_s^a + v(t+h, Y_{\tau}^{t, Y^{t,y}_{t+h}}, Z_{\tau}^{t, Z^{t,z}_{t+h}}, S_{\tau}^{t, S^{t,S}_{t+h}}) - v(t, Y_{\tau}^{t,y}, S_{\tau}^{t,s}) \Bigm| \mathcal{F}_t \right],-v(t,y,S) \right \}$}
+
+\scalebox{0.9}{$0=\max \left \{\mathbb{E} \left[ \displaystyle\int_{t}^{t+h} \beta^b_{t+h}(Y_{s\shortminus}, S_{s}) \, dN_s^b + \displaystyle\int_{t}^{t+h} \beta^a_{t+h}(Y_{s\shortminus}, S_{s}) \, dN_s^a + \displaystyle\int_{t}^{t+h} \, dv(u, Y_u, S_u) \Bigm| \mathcal{F}_t \right],-v(t,y,S) \right \}$}\\
+
+Applying Itô formula on $v(t,Y_t,S_t)$ with jump and diffusion processes:\\
+
+\scalebox{0.9}{%
+$\begin{aligned}
+0 = \max \bigg\{ &\mathbb{E} \bigg[ \displaystyle\int_{t}^{t+h} \frac{\partial}{\partial t} v(u, Y_u, S_u) \, du + \displaystyle\int_{t}^{t+h} \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(u, Y_u, S_u) \, du + \displaystyle\int_{t}^{t+h} \sigma \frac{\partial}{\partial S} v(u, Y_u, S_u) \, dW_u \\
+&\quad + \displaystyle\int_{t}^{t+h} \big( \beta^a_{t+h}(Y_{u\shortminus}, S_{u}) + v(u, Y_{u\shortminus} - \xi, S_u) - v(u, Y_{u\shortminus}, S_u) \big) \, dN_u^a \\
+&\quad + \displaystyle\int_{t}^{t+h} \big( \beta^b_{t+h}(Y_{u\shortminus}, S_u) + v(u, Y_{u\shortminus} + \xi, S_u) - v(u, Y_{u\shortminus}, S_u)\big) \, dN_u^b \Bigm| \mathcal{F}_t \bigg] \notag, -v(t, y, S) \bigg\}
+\end{aligned}$
+}\\
+
+Recalling that $d\tilde{N}_t^a = dN_t^a - \lambda_t^a \, dt$, $d\tilde{N}_t^b = dN_t^b - \lambda_t^a \, dt$ with $\lambda_t^a = \bar{\lambda}^a(Y_{t\shortminus}, S_t)$, $\bar{\lambda}^b(Y_{t\shortminus}, S_t)$.\\
+
+Expectation of martingale parts $\displaystyle\int_{}^{}.dW_t$ and $\displaystyle\int_{}^{}.d\tilde{N}_t$ are 0.\\
+
+\scalebox{0.9}{%
+$\begin{aligned}
+0 = \max \bigg\{ & \displaystyle\int_{t}^{t+h} \frac{\partial}{\partial t} v(u, y, S) \, + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(u, y, S) \, \\
+&\quad + \bar{\lambda}^a(y, S) \big[ \varphi_c(y - \xi) - \varphi_c(y) - \xi S_{t+h} + r(y) + v(u, y - \xi, S) - v(u, y, S) \big] \,  \\
+&\quad + \bar{\lambda}^b(y, S) \big[ \varphi_c(y + \xi) - \varphi_c(y) + \xi S_{t+h} + r(y) + v(u, y + \xi, S) - v(u, y, S) \big] \, du, -v(t, y, S) \bigg\}
+\end{aligned}$
+}\\
+
+Therefore, for $h$ small enough, the variational inequality is:\\
+
+\scalebox{0.9}{%
+$\begin{aligned}
+0 = \max \bigg\{ & \frac{\partial}{\partial t} v(t, y, S) \, + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(t, y, S) \, \\
+&\quad + \bar{\lambda}^a(y, S) \big[ \varphi_c(y - \xi) - \varphi_c(y) - \xi S_t + r(y) + v(t, y - \xi, S) - v(t, y, S) \big] \,  \\
+&\quad + \bar{\lambda}^b(y, S) \big[ \varphi_c(y + \xi) - \varphi_c(y) + \xi S_t + r(y) + v(t, y + \xi, S) - v(t, y, S) \big] \, , -v(t, y, S) \bigg\}
+\end{aligned}$
+}\\
+
+Tentative with risk-averse framework:
+
+With terminal condition : $v(T,y,S)=- \exp \left\{ - \gamma \left( x-X_{0} +(y-Y_{0})S + r(y) \right) \right\}$ \\
+
+\section{Euler Scheme - Risk Neutral}
+~
+We have $x,y$ variables linked, $\frac{x}{y}=z$ and $\varphi_{c}(y) = \frac{c}{y} = x$. Therefore, the problem can be reduce from dimension 4 to dimension 2, we write again the EDP in the variational inequality.\\
+
+\scalebox{1}{%
+$\begin{aligned}
+0 = & \frac{\partial}{\partial t} v(t, y, S) \, + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} v(t, y, S) \, \\
+&\quad + \bar{\lambda}^a(y, S) \big[ \varphi_c \big(y - \xi \big) - \varphi_c \big(y \big) - \xi S_t + r \big(\frac{c}{y^2} \big) + v(t, y - \xi, S) - v(t, y, S) \big] \,  \\
+&\quad + \bar{\lambda}^b(y, S) \big[ \varphi_c \big(y + \xi \big) - \varphi_c \big(y \big) + \xi S_t + r \big(\frac{c}{y^2} \big) + v(t, y + \xi, S) - v(t, y, S) \big] \
+\end{aligned}$
+}\\
+
+Backward Euler discretization for $\delta$ and $h$ small enough and $\xi$ for the jumps:\\
+
+Diffusion part for $i \in \{0,...,I-1\}$, $t_0=0$ and $t_I=T$ and $j \in \{1,...,J-1\}$:\\
+
+$\begin{aligned}
+&\frac{\partial}{\partial t} v(t, y, S) \approx \frac{v(t + \delta,y,S) - v(t,y,S)}{\delta} = \frac{v(t_{i+1},y_l,S_j) - v(t_{i},y_l,S_j)}{\delta} \\
+&\frac{\partial^2}{\partial S^2} v(t, y, S) \approx \frac{v(t,y,S+h) - 2v(t,y,S) + v(t,y,S-h)}{h^2} = \frac{v(t_{i},y_l,S_{j+1}) - 2v(t_{i},y_l,S_j) + v(t_{i},y_l,S_{j-1})}{h^2} \\
+&\frac{\partial}{\partial S} v(t,y,S) \approx \frac{v(t,y,S+h) - v(t,y,S)}{h}
+\end{aligned}$\\ \\
+
+Jump part for $l \in \{1,...,L-1\}$:\\
+
+$\begin{aligned}
+&\bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_{i}, y_{l-1}, S_j) - v(t_{i}, y_l, S_j) \big] \\
+&\bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) + v(t_{i}, y_{l+1}, S_j) - v(t_{i}, y_l, S_j) \big]
+\end{aligned}$ \\
+
+\underline{Full Euler scheme:}\\
+
+\scalebox{1}{%
+$\begin{aligned}
+v(t_{i+1},y_l,S_j) = & ~ v(t_{i},y_l,S_j) \big [ 1 + \delta \big(\frac{\sigma^2}{h^2} + \bar{\lambda}^a(y_l, S_j) + \bar{\lambda}^b(y_l, S_j)\big) \big] \, \\
+&+ v(t_{i},y_l,S_{j+1}) \big[-\frac{\delta \sigma^2}{2h^2} \big] \, \\
+&+ v(t_{i},y_l,S_{j-1}) \big[-\frac{\delta \sigma^2}{2h^2} \big] \, \\
+&+ v(t_{i+1}, y_{l-1}, S_j) \big[-\delta\bar{\lambda}^a(y_l, S_j) \big] \, \\
+&+ v(t_{i+1}, y_{l+1}, S_j) \big[-\delta\bar{\lambda}^b(y_l, S_j) \big] \, \\
+&- \delta\bar{\lambda}^a(y_l, S_j) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] - \delta\bar{\lambda}^b(y_l, S_j) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(\frac{c}{y_l^2} \big) \big] \
+\end{aligned}$
+}\\
+
+Operator Splitting Idea: At each time of the discretization, add jumps and then solve the linear system.\\
+
+\underline{Boundary conditions:}\\
+
+A terminal time $T$, we have $v(T,y,S)=0$, in the Euler scheme this means:\\
+
+$\begin{aligned}
+&\forall \, l \in \{0, \ldots, L\}, \, j \in \{0, \ldots, J\} , v(t_I, y_l, S_j) = 0\\
+\end{aligned}$\\
+
+Neumann condition:
+$\left. \frac{\partial^2 v(t, y, S)}{\partial S^2} \right|_{S = S_0} = 0, \quad 
+\left. \frac{\partial^2 v(t, y, S)}{\partial S^2} \right|_{S = S_J} = 0$, in the Euler scheme these mean:\\
+
+\scalebox{1}{%
+$\begin{aligned}
+v(t_{i+1},y_l,S_0) = & ~ v(t_{i},y_l,S_0) \big [ 1 + \delta \big(\bar{\lambda}^a(y_l, S_0) + \bar{\lambda}^b(y_l, S_0)\big) \big] \, \\
+&+ v(t_{i}, y_{l-1}, S_0) \big[-\bar{\lambda}^a(y_l, S_0) \big] \, \\
+&+ v(t_{i}, y_{l+1}, S_0) \big[-\bar{\lambda}^b(y_l, S_0) \big] \, \\
+&- \bar{\lambda}^a(y_l, S_0) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_0 + r \big(\frac{c}{y_l^2} \big) \big] - \bar{\lambda}^b(y_l, S_0) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_0 + r \big(\frac{c}{y_l^2} \big) \big] \
+\end{aligned}$
+}\\
+
+\scalebox{1}{%
+$\begin{aligned}
+v(t_{i+1},y_l,S_J) = & ~ v(t_{i},y_l,S_J) \big [ 1 - \delta \big( \bar{\lambda}^a(y_l, S_J) + \bar{\lambda}^b(y_l, S_J)\big) \big] \, \\
+&+ v(t_{i}, y_{l-1}, S_J) \big[-\bar{\lambda}^a(y_l, S_J) \big] \, \\
+&+ v(t_{i}, y_{l+1}, S_J) \big[-\bar{\lambda}^b(y_l, S_J) \big] \, \\
+&- \bar{\lambda}^a(y_l, S_J) \big[ \varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_J + r \big(\frac{c}{y_l^2} \big) \big] - \bar{\lambda}^b(y_l, S_J) \big[ \varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_J + r \big(\frac{c}{y_l^2} \big) \big] \
+\end{aligned}$
+}\\ \\
+
+We denote:\\
+
+$\begin{aligned}
+& c_0(y_l,S_j) = \big [ 1 + \delta \big(\bar{\lambda}^a(y_l, S_j) + \bar{\lambda}^b(y_l, S_j)\big) \big] \\
+&c_1(y_l,S_j) = -\frac{\delta \sigma^2}{2h^2} = c_1\\
+&c_2(y_l,S_j) = \big [ 1 + \delta \big(\frac{\sigma^2}{h^2} + \bar{\lambda}^a(y_l, S_j) + \bar{\lambda}^b(y_l, S_j)\big) \big] \\
+&c_3(y_l,S_j) = -\frac{\delta \sigma^2}{2h^2} = c_3\\
+\end{aligned}$\\ \\
+
+Linear system to solve: $V^{i+1,l} = A V^{i,l}$ for $i \in \{0,...,I-1\}$ where:\\
+
+$A = \begin{bmatrix}
+c_0(y_l,S_0) & 0 & 0 & \cdots &  & 0 \\
+c_1 & c_2(y_l,S_1) & c_3 & \ddots &  & \vdots \\
+0 & c_1 & c_2(y_l,S_2) & \ddots &  &  \\
+\vdots & \ddots & \ddots & \ddots & c_3 & 0 \\
+ &  &  & c_1 & c_2(y_l,S_{J-1}) & c_3 \\
+0 & \cdots &  & 0 & 0 & c_0(y_l,S_J)
+\end{bmatrix}
+\in \mathbb{R}^{J+1,J+1}$, ~~~~~
+$V^{i,l} =
+\begin{bmatrix}
+v(t_i, y_l, S_0) \\
+v(t_i, y_l, S_1) \\
+~ \\ \vdots \\ ~ \\
+v(t_i, y_l, S_{J-1}) \\
+v(t_i, y_l, S_J)
+\end{bmatrix}
+\in \mathbb{R}^{J+1}
+$\\
+
+
+\section{Euler Scheme - Risk Averse}
+~
+We have $x,y$ variables linked, $\frac{x}{y}=z$ and $\varphi_{c}(y) = \frac{c}{y} = x$. Therefore, the problem can be reduce from dimension 4 to dimension 2, we write again the EDP in the variational inequality.\\
+
+\scalebox{1}{%
+$\begin{aligned}
+0 = & \quad \frac{\partial}{\partial t} v(t, y, S) \, + \frac{1}{2} \sigma^2 \left(\frac{\partial^2}{\partial S^2} v(t, y, S) - \psi \left(\frac{\partial v(t,y,S)}{\partial S}\right)^2\right) \, \\
+&\quad + \mathds{1}_{\{y+\xi \leq \overline{Y}\}} \bar{\lambda}^b(y, S) \frac{1}{\psi} \left[ 1 - \exp\left(-\psi \left(\varphi_c \big(y + \xi \big) - \varphi_c \big(y \big) + \xi S_t + r \big(y \big) + v(t, y + \xi, S) - v(t, y, S)\right)\right) \right] \, \\
+&\quad + \mathds{1}_{\{y-\xi \geq \underline{Y}\}} \bar{\lambda}^a(y, S) \frac{1}{\psi} \left[ 1 - \exp \left(-\psi\left(\varphi_c \big(y - \xi \big) - \varphi_c \big(y \big) - \xi S_t + r \big(y \big) + v(t, y - \xi, S) - v(t, y, S)\right)\right) \right] \,
+\end{aligned}$
+}\\
+
+Backward Euler discretization for $\delta$ and $h$ small enough and $\xi$ for the jumps:\\
+
+Diffusion part for $i \in \{0,...,I-1\}$, $t_0=0$ and $t_I=T$ and $j \in \{1,...,J-1\}$:\\
+
+$\begin{aligned}
+&\frac{\partial}{\partial t} v(t, y, S) \approx \frac{v(t + \delta,y,S) - v(t,y,S)}{\delta} = \frac{v(t_{i+1},y_l,S_j) - v(t_{i},y_l,S_j)}{\delta} \\
+&\frac{\partial^2}{\partial S^2} v(t, y, S) \approx \frac{v(t,y,S+h) - 2v(t,y,S) + v(t,y,S-h)}{h^2} = \frac{v(t_{i},y_l,S_{j+1}) - 2v(t_{i},y_l,S_j) + v(t_{i},y_l,S_{j-1})}{h^2} \\
+&\frac{\partial}{\partial S} v(t,y,S) \approx \frac{v(t,y,S+h) - v(t,y,S-h)}{h} = \frac{v(t_i,y_l,S_{j+1}) - v(t_i,y_l,S_{j-1})}{2h} \, \\
+&\left(\frac{\partial}{\partial S} v(t,y,S)\right)^2 \approx \left(\frac{v(t,y,S+h) - v(t,y,S-h)}{2h}\right)^2 = \frac{v^2(t_i,y_l,S_{j+1}) - 2v(t_i,y_l,S_{j+1})v(t_i,y_l,S_{j-1}) + v^2(t_i,y_l,S_{j-1})}{4h^2}
+\end{aligned}$\\ \\
+
+Jump part for $l \in \{1,...,L-1\}$:\\
+
+$\begin{aligned}
+&\bar{\lambda}^a(y_l, S_j) \frac{1}{\psi} \big[ 1 - \exp \left(-\psi \left(\varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(y \big) + v(t_{i+1}, y_{l-1}, S_j) - v(t_{i+1}, y_l, S_j) \right)\right) \big] \\
+&\bar{\lambda}^b(y_l, S_j) \frac{1}{\psi} \big[ 1 - \exp \left(-\psi \left(\varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(y \big) + v(t_{i+1}, y_{l+1}, S_j) - v(t_{i+1}, y_l, S_j) \right)\right) \big]
+\end{aligned}$ \\
+
+\underline{Full Euler scheme:}\\
+
+\scalebox{1}{%
+$\begin{aligned}
+v(t_{i+1},y_l,S_j) = & ~ v(t_{i},y_l,S_j) \big [ 1 + \delta \frac{\sigma^2}{h^2} \big] \, \\
+&+ v(t_{i},y_l,S_{j+1}) \big[ -\frac{\delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} \left(v(t_{i},y_l,S_{j+1}) - v(t_{i},y_l,S_{j-1}) \right) \big] \, \\
+&+ v(t_{i},y_l,S_{j-1}) \big[ -\frac{\delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} \left(-v(t_{i},y_l,S_{j+1}) + v(t_{i},y_l,S_{j-1}) \right) \big] \, \\
+&+ \delta \bar{\lambda}^a(y_l, S_j) \frac{1}{\psi} \big[ 1 - \exp \left(-\psi \left(\varphi_c \big(y_{l-1} \big) - \varphi_c \big(y_l \big) - \xi S_j + r \big(y \big) + v(t_{i+1}, y_{l-1}, S_j) - v(t_{i+1}, y_l, S_j) \right)\right) \big] \, \\
+&+\delta \bar{\lambda}^b(y_l, S_j) \frac{1}{\psi} \big[ 1 - \exp \left(-\psi \left(\varphi_c \big(y_{l+1} \big) - \varphi_c \big(y_l \big) + \xi S_j + r \big(y \big) + v(t_{i+1}, y_{l+1}, S_j) - v(t_{i+1}, y_l, S_j) \right)\right) \big]\ 
+\end{aligned}$
+}\\
+
+Let us define the following function:\\
+
+$\begin{aligned}
+F(v_{i,l}) =  v^j_{i,l} \left[1 + \delta \frac{\sigma^2}{h^2} \right]  + v^{j+1}_{i,l}  \left[ -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (v^{j+1}_{i,l} - v^{j-1}_{i,l}) \right] + v^{j-1}_{i,l}  \left[ -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (-v^{j+1}_{i,l} + v^{j-1}_{i,l}) \right]
+\end{aligned}$ \\
+
+where: $v_{i,l} =
+\begin{bmatrix}
+v(t_i, y_l, S_0) \\
+v(t_i, y_l, S_1) \\
+~ \\ \vdots \\ ~ \\
+v(t_i, y_l, S_{J-1}) \\
+v(t_i, y_l, S_J)
+\end{bmatrix}
+\in \mathbb{R}^{J+1}
+$\\
+
+The Newton method: For all $l$ in ${0,...,L}$: $v^{(k+1)}_{i,l} =  v^{(k)}_{i,l} - \left[\frac{\partial{F}}{\partial{v^{(k)}_{i,l}}}\right]^{-1}F(v^{(k)}_{i,l})$ \\
+
+With the following derivatives\\
+
+$\begin{aligned}
+\frac{\partial}{\partial v^j_{i,l}}F(v_{i,l}) = & \, 1 + \delta \frac{\sigma^2}{h^2} \,\\
+\frac{\partial}{\partial v^{j+1}_{i,l}}F(v_{i,l}) = & \left[ -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (2v^{j+1}_{i,l} - v^{j-1}_{i,l}) \right] \, \\
+\frac{\partial}{\partial v^{j-1}_{i,l}}F(v_{i,l}) = & \left[ -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (-v^{j+1}_{i,l} + 2v^{j-1}_{i,l}) \right]
+\end{aligned}$ \\ \\
+
+We denote:\\
+
+$\begin{aligned}
+& c_0 = 0 \\
+&c_1 =  -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (-v_{i,l}^{j+1} + 2v_{i,l}^{j-1})\\
+&c_2 = 1 + \delta \frac{\sigma^2}{h^2} \\
+&c_3 = -\frac{ \delta\sigma^2}{2h^2} + \psi \frac{\delta\sigma^2}{4h^2} (2v_{i,l}^{j-1} - v_{i,l}^{j+1})\\
+\end{aligned}$\\ \\
+
+The Jacobian matrix is: $\frac{\partial{F}}{\partial{v^{(k)}_{i,l}}} = \begin{bmatrix}
+c_0 & 0 & 0 & \cdots &  & 0 \\
+c_1 & c_2 & c_3 & \ddots &  & \vdots \\
+0 & c_1 & c_2 & \ddots &  &  \\
+\vdots & \ddots & \ddots & \ddots & c_3 & 0 \\
+ &  &  & c_1 & c_2 & c_3 \\
+0 & \cdots &  & 0 & 0 & c_0
+\end{bmatrix}
+\in \mathbb{R}^{J+1,J+1}$\\
+
+
+Operator Splitting Idea: At each time of the discretization, add jumps and then solve the linear system.\\
+
+\section{Viscosity Solution}
+
+\subsection{Existence result}
+
+We denote by $C^{1,0,2}:=C^{1,0,2}([0,T) \times \mathbb{R} \times \mathbb{R})$ the class of functions $\gamma:[0,T) \times \mathbb{R} \times \mathbb{R} \to\ \mathbb{R}$ that are continuously differentiable with respect to the first variable on $[0,T)$, continuous with respect to the second variable on $\mathbb{R}$, twice continuously differentiable  with respect to the third variable on $\mathbb{R}$.
+
+\begin{definition}
+~
+\begin{enumerate}[label=(\roman*)]
+\item If $u$ is an upper semicontinuous (USC) function on $[0,T) \times \mathbb{R}^2$, we say that $u$ is a viscosity subsolution to the QVI on $[0,T) \times \mathbb{R}^2$ if $\forall (\bar{t},\bar{y},\bar{S}) \in [0,T) \times \mathbb{R}^2$, $\forall \gamma \in C^{1,0,2}$ such that $(u-\gamma)(\bar{t},\bar{y},\bar{S})=\max_{(t,y,S) \in [0,T) \times \mathbb{R}^2}(u-\gamma)(t,y,S)$, we have:
+	
+$\begin{aligned}
+\min \big\{ 
+&-\frac{\partial}{\partial t} \gamma(\bar{t}, \bar{y}, \bar{S})
+- \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} \gamma(\bar{t}, \bar{y}, \bar{S}) \\
+& - \bar{\lambda}^a(\bar{y}, \bar{S}) \left[ \beta^a(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} - \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right] - \bar{\lambda}^b(\bar{y}, \bar{S}) \left[ \beta^b(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} + \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right], \gamma(\bar{t}, \bar{y}, \bar{S}) 
+\big\} \leq 0
+\end{aligned}$
+
+\item If $\theta$ is an lower semicontinuous (LSC) function on $[0,T) \times \mathbb{R}^2$, we say that $\theta$ is a viscosity supersolution to the QVI on $[0,T) \times \mathbb{R}^2$ if $\forall (\bar{t},\bar{y},\bar{S}) \in [0,T) \times \mathbb{R}^2$, $\forall \gamma \in C^{1,0,2}$ such that $(\theta-\gamma)(\bar{t},\bar{y},\bar{S})=\min_{(t,y,S) \in [0,T) \times \mathbb{R}^2}(\theta-\gamma)(t,y,S)$, we have:
+	
+$\begin{aligned}
+\min \big\{ 
+&- \frac{\partial}{\partial t} \gamma(\bar{t}, \bar{y}, \bar{S})
+- \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} \gamma(\bar{t}, \bar{y}, \bar{S}) \\
+& - \bar{\lambda}^a(\bar{y}, \bar{S}) \left[ \beta^a(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} - \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right] - \bar{\lambda}^b(\bar{y}, \bar{S}) \left[ \beta^b(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} + \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right], \gamma(\bar{t}, \bar{y}, \bar{S}) 
+\big\} \geq 0
+\end{aligned}$
+
+\item If $v$ is locally bounded on $[0,T) \times \mathbb{R}^2$, we say that $v$ is a viscosity solution to QVI on $[0,T) \times \mathbb{R}^2$ if its upper semicontinuous envelope $v^*$ and its lower semicontinuous envelope $v_*$ are respectively subsolution on $[0,T) \times \mathbb{R}^2$ and supersolution on $[0,T) \times \mathbb{R}^2$ to the QVI.
+
+\end{enumerate}
+\end{definition}
+
+\begin{prop}
+The value function $v$ is bounded on $ [0,T] \times \mathbb{R}^2$
+\end{prop}
+
+\textit{Proof.} 
+\\
+$\forall (t,y,S) \in [0,T) \times \mathbb{R}^2$, we have
+\\ \\ \\
+$\begin{aligned}
+v(t,y,S) = &\sup_{\tau \in \Tc_{t,T}} \mathbb{E} \left[ \displaystyle\int_{t}^{\tau} \beta^a(Y_{u\shortminus}, S_u) \, dN^a_u + \displaystyle\int_{t}^{\tau} \beta^b(Y_{u\shortminus}, S_u) \, dN^b_u \right] \, \\
+= & \sup_{\tau \in \Tc_{t,T}} \mathbb{E} \left[ \displaystyle\int_{t}^{\tau} \beta^a(Y_{u\shortminus}, S_u) \, \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds 1_{\{Y_{u\shortminus} \ge 2\xi\}} + \beta^b(Y_{s\shortminus}, S_u) \, \bar{\lambda}^b(Y_{u\shortminus}, S_u) \, du \right] \, \\
+\end{aligned}$
+\\ \\
+We look at both quantities inside the integrand, we assume that $\mathfrak{r}$ has linear growth and that the process $Y=(Y_t)_{t\in \mfT}$ is bounded.\\ \\
+$\begin{aligned}
+\beta^a(Y_{u\shortminus}, S_u) \, \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds 1_{\{Y_{u\shortminus} \ge 2\xi\}} = & \,\big( \varphi_c(Y_{u\shortminus} - \xi) - \varphi_c(Y_{u\shortminus}) - \xi S_u + \mathfrak{r}(Y_{{u\shortminus}}) \big) \, \max\left\{a_0, a_1 + a_2\,(S_u - \frac{c}{Y_{u{\shortminus}}^2})\right\}\, \mathds 1_{\{Y_{{u\shortminus}} \ge 2\xi\}} \,, \\
+ \leq & \, \big( |\varphi_c(Y_{u\shortminus} - \xi)| + |\varphi_c(Y_{u\shortminus})| + |\xi S_u| + |\mathfrak{r}(Y_{{u\shortminus}})| \big)  \, \left(|a_0|+ |a_1 + a_2\,(S_u - \frac{c}{Y_{u{\shortminus}}^2}) | \right) \, \\
+  \leq & \, \big( |\frac{c}{Y_{u\shortminus} - \xi}| + |\frac{c}{Y_{u\shortminus}}| + |\xi S_u| + |\mathfrak{r}(Y_{{u\shortminus}})| \big)  \, \left(|a_0|+ |a_1 + |a_2|\,(|S_u| + \frac{c}{Y_{u{\shortminus}}^2}) \right) \, \\
+  \leq & \, \big( \frac{c}{\xi} + \frac{c}{2 \xi} + \xi|S_u| + |\mathfrak{r}(Y_{{u\shortminus}})| \big)  \, \left(a_0 + a_1 + a_2\,(|S_u| + \frac{c}{\xi^2}) \right) \, \\
+  \leq & \, C^a_0 + C^a_1|Y_{u\shortminus}| + C^a_2\sup_{u \in {[t,\tau]}}|S_u| + C^a_3\sup_{u \in {[t,\tau]}}|S_u|^2
+\end{aligned}$
+\\ \\ \\
+Where $C^a_0$, $C^a_1$, $C^a_2$, $C^a_3$ are constant depending on $\xi$,  $c$, $a_0$, $a_1$ and $a_2$
+\\ \\
+$\begin{aligned}
+\beta^b(Y_{u\shortminus}, S_u) \, \bar{\lambda}^b(Y_{u\shortminus}, S_u) = & \, \big( \varphi_c(Y_{u\shortminus} + \xi) - \varphi_c(Y_{u\shortminus}) + \xi S_u + \mathfrak{r}(Y_{u{\shortminus}}) \big) \, \max\left\{a_0, a_1 + a_2\,(\frac{c}{Y_{u{\shortminus}}^2} - S_u)\right\}\ \, \\
+\leq & \, \big( |\varphi_c(Y_{u\shortminus} + \xi)| + |\varphi_c(Y_{u\shortminus})| + |\xi S_u| + |\mathfrak{r}(Y_{{u\shortminus}})| \big)  \, \left(|a_0|+ |a_1 + a_2\,(\frac{c}{Y_{u{\shortminus}}^2} - S_u|\right) \, \\
+\leq & \, \big( |\frac{c}{Y_{u\shortminus} + \xi}| + |\frac{c}{Y_{u\shortminus}}| + |\xi S_u| + |\mathfrak{r}(Y_{{u\shortminus}})| \big)  \, \left(|a_0|+ |a_1 + a_2\,(\frac{c}{Y_{u{\shortminus}}^2} - S_u)|\right) \, \\
+\leq & \, \big( |\frac{c}{Y_{u\shortminus} + \xi}| + |\frac{c}{Y_{u\shortminus}}| + \xi |S_u| + |\mathfrak{r}(Y_{{u\shortminus}})| \big)  \, \left(a_0 + a_1 + a_2\,(\frac{c}{Y_{u{\shortminus}}^2} + |S_u|)\right) \, \\
+\leq & \, C^b_0 + C^b_1|Y_{u\shortminus}| + C^b_2\sup_{u \in {[t,\tau]}}|S_u| + C^b_3\sup_{u \in {[t,\tau]}}|S_u|^2
+\end{aligned}$
+\\ \\
+Using Jensen for concave functions and then Doob inequality we can show that
+\\ \\
+$\begin{aligned}
+\mathbb{E} \left[ \sup_{u \in {[t,T]}} |S_u| \right] \leq & \, \mathbb{E} \left[ \sup_{u \in {[0,T]}} |S_u| \right] \leq \, |S_0| + \sigma\mathbb{E} \left[ \sup_{u \in {[0,T]}} |\int_{0}^{u}dW_s| \right] = \, |S_0| + \sigma\mathbb{E} \left[ \sup_{u \in {[0,T]}} |W_u| \right] = \, |S_0| + \sigma\mathbb{E} \left[ \sup_{u \in {[0,T]}} \sqrt{W_u^2} \right] \, \\
+\leq & |S_0| + 2\sigma \sqrt{T}
+\end{aligned}$
+\\ \\
+$\begin{aligned}
+\mathbb{E} \left[ \sup_{u \in {[t,T]}} |S_u|^2 \right] \leq & \, \mathbb{E} \left[ \sup_{u \in {[0,T]}} |S_u|^2 \right] = \, S_0^2 + 2 S_0 \sigma\mathbb{E} \left[ \sup_{u \in {[0,T]}} W_u \right] + \sigma^2 \mathbb{E} \left[ \sup_{u \in {[0,T]}} W_u^2 \right] \, \\
+\leq & S_0^2 + 4S_0\sigma^2\sqrt{T} + 4\sigma^2T
+\end{aligned}$
+\\ \\ \\
+We can conclude that the value function has linear growth and then is locally bounded from above. Furthermore, looking at the QVI the value function is bounded from below by 0.
+\\
+\begin{prop}
+$v$ is a viscosity subsolution to the QVI on $ [0,T) \times \mathbb{R}^2$.
+\end{prop}
+
+
+
+\textit{Proof.} 
+\\ \\
+$v$ is bounded on $ [0,T] \times \mathbb{R}^2$ so we can define $v^*$ its upper semicontinuous envelope. Let $(\bar{t},\bar{y},\bar{S}) \in [0,T) \times \mathbb{R}^2$ and $\gamma \in C^{1,0,2}$ such that:
+\\ \\
+$\begin{aligned}
+0 = (v^*-\gamma)(\bar{t},\bar{y},\bar{S}) = \max_{(t,y,S) \in [0,T) \times \mathbb{R}^2}(v^*-\gamma)(t,y,S)
+\end{aligned}$
+\\ \\
+We assume this maximum to be strict. By definition of $v^*(\bar{t}, \bar{y}, \bar{S})$, their exists $(t_m, y_m, S_m)_m$ a sequence of $[0,T) \times \mathbb{R}^2$ such that:
+\\ \\
+$\begin{aligned}
+(t_m, y_m, S_m) \xlongrightarrow{m \to \infty} (\bar{t}, \bar{y}, \bar{S}) \, \\
+v(t_m, y_m, S_m) \xlongrightarrow{m \to \infty} v^{*}(\bar{t}, \bar{y}, \bar{S})
+\end{aligned}$
+\\ \\ \\
+We prove the result by contradiction. Assume there exists $\eta > 0$ such that
+\\ \\
+$\begin{aligned}
+\min \big\{ 
+&- \frac{\partial}{\partial t} \gamma(\bar{t}, \bar{y}, \bar{S})
+- \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} \gamma(\bar{t}, \bar{y}, \bar{S}) \\
+& - \bar{\lambda}^a(\bar{y}, \bar{S}) \left[ \beta^a(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} - \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right] - \bar{\lambda}^b(\bar{y}, \bar{S}) \left[ \beta^b(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} + \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right], \gamma(\bar{t}, \bar{y}, \bar{S}) 
+\big\} > \eta
+\end{aligned}$
+\\ \\
+This means that both quantities in the maximum must satisfy
+\\ \\
+\begin{equation}
+\left\{\begin{aligned}
+& - \frac{\partial}{\partial t} \gamma(\bar{t}, \bar{y}, \bar{S})
+- \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} \gamma(\bar{t}, \bar{y}, \bar{S})
+- \bar{\lambda}^a(\bar{y}, \bar{S}) \left[ \beta^a(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} - \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right] - \bar{\lambda}^b(\bar{y}, \bar{S}) \left[ \beta^b(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} + \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right] >\eta \, \\
+& \gamma(\bar{t}, \bar{y}, \bar{S}) > \eta
+\end{aligned}\right.
+\end{equation}
+\\
+Then, as $\gamma$ is $C^{1,0,2}$, we must have
+\\ \\
+$\begin{aligned}
+\min \big\{ 
+&- \frac{\partial}{\partial t} \gamma(t, y, S)
+- \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} \gamma(t, y, S) \\
+& - \bar{\lambda}^a(y, S) \left[ \beta^a(y,S) + \gamma(t, y - \xi, S) - \gamma(t, y, S) \right] - \bar{\lambda}^b(y, S) \left[ \beta^b(y,S) + \gamma(t, y + \xi, S) - \gamma(t, y, S) \right], \gamma(t, y, S) 
+\big\} > \eta
+\end{aligned}$
+\\ \\ \\
+on $B:=B\left( (\bar{t}, \bar{y}, \bar{S}), \varepsilon \right)$, where $\varepsilon := \min_{(t, y, S) \in A} d\left((t, y, S), (\bar{t}, \bar{y}, \bar{S})\right)$ and $A := \left\{ (t, y, S) \in [0, T) \times \mathbb{R}^2 \;\middle|\; \left| v^*(t, y, S) - \gamma(t, y, S) \right| \geq \eta \right\}$. Without loss of generality, we can assume that $B$ contains the sequence $(t_m, y_m, S_m)_m$
+\\ \\
+We introduce a stopping time $\pi_m = \inf \left\{ t \geq t_m \mid (t, Y_t^{t_m, y_m}, S_t^{t_m, S_m}) \notin B \right\}$
+\\ \\
+By Itô's formula applied to $\gamma$ at time $\pi_m \wedge \tau$ where $\tau$ is a stopping time,
+\\ \\
+$\begin{aligned}
+\gamma(\pi_m \wedge \tau, Y^{t_m, y_m}_{\pi_m \wedge \tau}, S^{t_m, S_m}_{\pi_m \wedge \tau}) = \gamma(t_m, y_m, S_m) \, & + \int_{t_m}^{\pi_m \wedge \tau} \frac{\partial}{\partial t}\gamma(u, Y_{u\shortminus}, S_u) \, du + \frac{1}{2} \sigma^2 \int_{t_m}^{\pi_m \wedge \tau} \frac{\partial^2}{\partial S^2}\gamma(u, Y_{u\shortminus}, S_u) \, du \, \\
+& + \int_{t_m}^{\pi_m \wedge \tau} \frac{\partial}{\partial S}\gamma(u, Y_{u\shortminus}, S_u) \, dW_u \, \\
+& + \int_{t_m}^{\pi_m \wedge \tau}\left[\gamma(u, Y_{u\shortminus} - \xi, S_u) -\gamma(u, Y_{u\shortminus}, S_u]\right) \, dN^a_u \, \\
+& +\int_{t_m}^{\pi_m \wedge \tau} \left[\gamma(u, Y_{u\shortminus} + \xi, S_u) -\gamma(u, Y_{u\shortminus}, S_u]\right) \, dN^b_u \, \\
+\end{aligned}$
+\\ \\ \\
+$\begin{aligned}
+\gamma(\pi_m \wedge \tau, Y^{t_m, y_m}_{\pi_m \wedge \tau}, S^{t_m, S_m}_{\pi_m \wedge \tau}) 
+= \gamma(t_m, y_m, S_m) 
+&+ \int_{t_m}^{\pi_m \wedge \tau} \bigg[
+    \frac{\partial}{\partial t} \gamma(u, Y_{u\shortminus}, S_u) 
+    + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} \gamma(u, Y_{u\shortminus}, S_u) \\
+&\quad + \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds{1}_{\{Y_{u\shortminus} \ge 2\xi\}} 
+    \left(\gamma(u, Y_{u\shortminus} - \xi, S_u) - \gamma(u, Y_{u\shortminus}, S_u)\right) \\
+&\quad + \bar{\lambda}^b(Y_{u\shortminus}, S_u) 
+    \left[\gamma(u, Y_{u\shortminus} + \xi, S_u) - \gamma(u, Y_{u\shortminus}, S_u)\right]
+\bigg] du \\
+&+ \int_{t_m}^{\pi_m \wedge \tau} 
+    \left[\gamma(u, Y_{u\shortminus} - \xi, S_u) - \gamma(u, Y_{u\shortminus}, S_u)\right] \, d\tilde{N}^a_u \\
+&+ \int_{t_m}^{\pi_m \wedge \tau} 
+    \left[\gamma(u, Y_{u\shortminus} + \xi, S_u) - \gamma(u, Y_{u\shortminus}, S_u)\right] \, d\tilde{N}^b_u \\
+&+ \int_{t_m}^{\pi_m \wedge \tau} 
+    \frac{\partial}{\partial S} \gamma(u, Y_{u\shortminus}, S_u) \, dW_u
+\end{aligned}$
+\\ \\
+$\begin{aligned}
+\gamma(\pi_m \wedge \tau, Y^{t_m, y_m}_{\pi_m \wedge \tau}, S^{t_m, S_m}_{\pi_m \wedge \tau}) 
+= \gamma(t_m, y_m, S_m) 
+&- \int_{t_m}^{\pi_m \wedge \tau} - \bigg\{
+    \frac{\partial}{\partial t} \gamma(u, Y_{u\shortminus}, S_u) 
+    + \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} \gamma(u, Y_{u\shortminus}, S_u) \\
+&\quad + \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds{1}_{\{Y_{u\shortminus} \ge 2\xi\}} 
+    \left[\beta^a(Y_{u\shortminus},S_u) + \gamma(u, Y_{u\shortminus} - \xi, S_u) - \gamma(u, Y_{u\shortminus}, S_u)\right] \\
+&\quad + \bar{\lambda}^b(Y_{u\shortminus}, S_u) 
+    \left[\beta^b(Y_{u\shortminus},S_u) + \gamma(u, Y_{u\shortminus} + \xi, S_u) - \gamma(u, Y_{u\shortminus}, S_u)\right]
+\bigg\} du \\
+& - \int_{t_m}^{\pi_m \wedge \tau}  \left[\beta^b(Y_{u\shortminus},S_u) \bar{\lambda}^b(Y_{u\shortminus}, S_u) + \beta^a(Y_{u\shortminus},S_u) \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds{1}_{\{Y_{u\shortminus} \ge 2\xi\}}\right] \, du \\
+&+ \int_{t_m}^{\pi_m \wedge \tau} 
+    \left[\gamma(u, Y_{u\shortminus} - \xi, S_u) - \gamma(u, Y_{u\shortminus}, S_u)\right] \, d\tilde{N}^a_u \\
+&+ \int_{t_m}^{\pi_m \wedge \tau} 
+    \left[\gamma(u, Y_{u\shortminus} + \xi, S_u) - \gamma(u, Y_{u\shortminus}, S_u)\right] \, d\tilde{N}^b_u \\
+&+ \int_{t_m}^{\pi_m \wedge \tau} 
+    \frac{\partial}{\partial S} \gamma(u, Y_{u\shortminus}, S_u) \, dW_u
+\end{aligned}$
+\\ \\
+Inside the first integrand, we recognize the stochastic partial differential equation that we supposed greater than $\eta > 0$ and the last three terms are martingale under the probability measure $\mathbb{P}$. Therefore, taking the expectation of the above quantity leads to
+\\ \\
+$\begin{aligned}
+\mathbb{E}\left[\gamma(\pi_m \wedge \tau, Y^{t_m, y_m}_{\pi_m \wedge \tau}, S^{t_m, S_m}_{\pi_m \wedge \tau})\right]
+\leq \gamma(t_m, y_m, S_m)  - \mathbb{E} \left[\int_{t_m}^{\pi_m \wedge \tau}  \left[\beta^b(Y_{u\shortminus},S_u) \bar{\lambda}^b(Y_{u\shortminus}, S_u) + \beta^a(Y_{u\shortminus},S_u) \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds{1}_{\{Y_{u\shortminus} \ge 2\xi\}}\right] \, du \right] \\
+\end{aligned}$
+\\ \\
+That we can write also 
+\\ \\
+$\begin{aligned}
+\gamma(t_m, y_m, S_m) \geq \mathbb{E}\left[\gamma(\pi_m \wedge \tau, Y^{t_m, y_m}_{\pi_m \wedge \tau}, S^{t_m, S_m}_{\pi_m \wedge \tau}) + \int_{t_m}^{\pi_m \wedge \tau}  \left[\beta^b(Y_{u\shortminus},S_u) \bar{\lambda}^b(Y_{u\shortminus}, S_u) + \beta^a(Y_{u\shortminus},S_u) \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds{1}_{\{Y_{u\shortminus} \ge 2\xi\}}\right] \, du \right] \\
+\end{aligned}$
+\\ \\
+As $\gamma$ is $C^{1,0,2}$, then $\gamma(t_m, y_m, S_m) \xlongrightarrow{m \to \infty} \gamma(\bar{t}, \bar{y}, \bar{S}) = v^*(\bar{t}, \bar{y}, \bar{S})$. We also have $v(t_m, y_m, S_m) \xlongrightarrow{m \to \infty} v^{*}(\bar{t}, \bar{y}, \bar{S})$. Therefore, since $B$ is compact we can find a $m$ sufficiently large such as $v(t_m, y_m, S_m) + \frac{\eta}{2} > \gamma_m$
+\\ \\
+$\begin{aligned}
+v(t_m, y_m, S_m) \geq -\frac{\eta}{2} + \mathbb{E}\left[\gamma(\pi_m \wedge \tau, Y^{t_m, y_m}_{\pi_m \wedge \tau}, S^{t_m, S_m}_{\pi_m \wedge \tau}) + \int_{t_m}^{\pi_m \wedge \tau}  \left[\beta^b(Y_{u\shortminus},S_u) \bar{\lambda}^b(Y_{u\shortminus}, S_u) + \beta^a(Y_{u\shortminus},S_u) \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds{1}_{\{Y_{u\shortminus} \ge 2\xi\}}\right] \, du \right] \\
+\end{aligned}$
+\\ \\
+Moreover,
+\\ \\
+$\begin{aligned}
+\gamma(\pi_m \wedge \tau, Y^{t_m, y_m}_{\pi_m \wedge \tau}, S^{t_m, S_m}_{\pi_m \wedge \tau}) = \underbrace{\gamma(\pi_m, Y^{t_m, y_m}_{\pi_m}, S^{t_m, S_m}_{\pi_m})}_{\geq v(\pi_m, Y^{t_m, y_m}_{\pi_m}, S^{t_m, y_m}_{\pi_m}) + \eta} \mathds{1}_{\{\pi_m < \tau\}} + \underbrace{\gamma(\tau, Y^{t_m, y_m}_{\tau}, S^{t_m, S_m}_{\tau})}_{> \eta}\mathds{1}_{\{\pi_m \geq \tau\}} \\
+\end{aligned}$
+\\ \\ \\
+Putting all things together
+\\ \\
+$\begin{aligned}
+v(t_m, y_m, S_m) \geq \, \frac{\eta}{2} + \mathbb{E}\left[\int_{t_m}^{\pi_m \wedge \tau}  \left[\beta^b(Y_{u\shortminus},S_u) \bar{\lambda}^b(Y_{u\shortminus}, S_u) + \beta^a(Y_{u\shortminus},S_u) \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds{1}_{\{Y_{u\shortminus} \ge 2\xi\}}\right] \, du + v(\pi_m, Y^{t_m, y_m}_{\pi_m}, S^{t_m, y_m}_{\pi_m}) \mathds{1}_{\{\pi_m < \tau\}} \right] \\
+\end{aligned}$
+\\ \\
+By taking the supremum over all the stopping time in $\Tc_{t_m,T}$ on the right-hand side, we get
+\\ \\
+$\begin{aligned}
+v(t_m, y_m, S_m) > \, \sup_{\tau \in \Tc_{t_m,T}} \mathbb{E}\left[\int_{t_m}^{\pi_m \wedge \tau}  \left[\beta^b(Y_{u\shortminus},S_u) \bar{\lambda}^b(Y_{u\shortminus}, S_u) + \beta^a(Y_{u\shortminus},S_u) \bar{\lambda}^a(Y_{u\shortminus}, S_u) \, \mathds{1}_{\{Y_{u\shortminus} \ge 2\xi\}}\right] \, du + v(\pi_m, Y^{t_m, y_m}_{\pi_m}, S^{t_m, y_m}_{\pi_m}) \mathds{1}_{\{\pi_m < \tau\}} \right] \\
+\end{aligned}$
+\\ \\ \\
+This contradicts the dynamic programming principle. Necessarily, we deduce:
+\\ \\
+$\begin{aligned}
+\min \big\{ 
+&- \frac{\partial}{\partial t} \gamma(\bar{t}, \bar{y}, \bar{S})
+- \frac{1}{2} \sigma^2 \frac{\partial^2}{\partial S^2} \gamma(\bar{t}, \bar{y}, \bar{S}) \\
+& - \bar{\lambda}^a(\bar{y}, \bar{S}) \left[ \beta^a(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} - \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right] - \bar{\lambda}^b(\bar{y}, \bar{S}) \left[ \beta^b(\bar{y},\bar{S}) + \gamma(\bar{t}, \bar{y} + \xi, \bar{S}) - \gamma(\bar{t}, \bar{y}, \bar{S}) \right], \gamma(\bar{t}, \bar{y}, \bar{S}) 
+\big\} \leq 0
+\end{aligned}$
+\\ \\ \\
+and $v$ is a viscosity subsolution to the QVI on $[0,T)x\mathbb{R}^2$
+~
+~
+~
+~
+~
+~
+~
+~
+
+
+
+\begin{comment}
+\begin{prop}
+~
+\begin{enumerate}[label=(\roman*)]
+\item Let $u$ be an USC function on $[0,T] \times \mathbb{R}^2$. $u$ is a viscosity subsolution to the QVI if and only if $\forall (\bar{t}, \bar{y}, \bar{S}) \in [0,T) \times \mathbb{R}^2$ , $\forall \gamma \in C^{1,0,2}$ such that $(u-\gamma)(\bar{t}, \bar{y}, \bar{S})=\max_{(t,y,S) \in [0,T) \times \mathbb{R}^2}(u-\gamma)(t,y,S)$, we have:
+
+\item 
+\end{enumerate}
+
+\end{prop}
+
+\end{comment}
+
+
+\begin{definition}
+The value function $v$ is said to have at most quadratic growth in its third variable if there exists a constant $C>0$ such that $\forall S \in \mathbb{R}, \, v(t,y,S) \leq C(1+S^2)$ for any fixed but arbitrary $t \in [0,T]$ and $y \in Q$.
+\end{definition}
+
+We assume without loss of generality that $Y_0$, $\underline Y$, $\overline{Y}$ are multiple of $\xi$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
