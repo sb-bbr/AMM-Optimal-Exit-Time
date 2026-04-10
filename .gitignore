@@ -1,6 +1,10 @@
 # ignore ALL files in ANY directory named temp
 perso/
 .venv/
+code/v2/saved_pkl/temp
+code/v3
+notes/v3
+slides/v3
 
 # ignore ALL .* files
 *.pkl
@@ -23,6 +27,7 @@ __pycache__
 *.out
 *.snm
 *.toc
+*.spl
 
 # ignore MacOS File
 .DS_Store
